@@ -109,6 +109,7 @@ const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState('subscriptions');
   const [roadshowCityFilter, setRoadshowCityFilter] = useState('all');
   const [roadshowView, setRoadshowView] = useState('registrations');
+  const [roadshowSearch, setRoadshowSearch] = useState('');
   const [localTierFilter, setLocalTierFilter] = useState('all');
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [clearing, setClearing] = useState(false);
@@ -1158,7 +1159,9 @@ const sendApprovalEmailWithTicket = async (submission, ticketId) => {
 
         {activeSection === 'roadshow' && (() => {
           const cities = ['Nakuru', 'Eldoret', 'Kisumu', 'Nairobi', 'Mombasa', 'Arusha', 'Kigali', 'Addis Ababa', 'Kampala'];
-          const filtered = roadshowCityFilter === 'all' ? roadshowRegs : roadshowRegs.filter(r => r.city === roadshowCityFilter);
+          const filtered = roadshowRegs
+            .filter(r => roadshowCityFilter === 'all' || r.city === roadshowCityFilter)
+            .filter(r => !roadshowSearch || r.name?.toLowerCase().includes(roadshowSearch.toLowerCase()) || r.email?.toLowerCase().includes(roadshowSearch.toLowerCase()) || r.phone?.includes(roadshowSearch));
           return (
             <div className="bg-white rounded-lg shadow p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
@@ -1198,6 +1201,12 @@ const sendApprovalEmailWithTicket = async (submission, ticketId) => {
                   </div>
                 </div>
               )}
+
+              {/* Search */}
+              <div className="relative mb-4">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input type="text" placeholder="Search by name, email or phone..." value={roadshowSearch} onChange={e => setRoadshowSearch(e.target.value)} className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+              </div>
 
               {/* View toggle */}
               <div className="flex gap-2 mb-5">
