@@ -1254,13 +1254,13 @@ const sendApprovalEmailWithTicket = async (submission, ticketId) => {
                   <table className="min-w-full text-sm">
                     <thead className="bg-gray-50">
                       <tr>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-600 w-8">Attended</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-600">Name</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-600">Email</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-600">Phone</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-600">Organization</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-600">City</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-600">Date</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-600">Attended</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-600">Actions</th>
                       </tr>
                     </thead>
@@ -1268,6 +1268,15 @@ const sendApprovalEmailWithTicket = async (submission, ticketId) => {
                       {filtered.map((reg, idx) => (
                         <>
                           <tr key={reg.id} className={`border-t hover:bg-indigo-50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                            <td className="px-4 py-3">
+                              <input
+                                type="checkbox"
+                                checked={!!reg.attended}
+                                onChange={(e) => { e.stopPropagation(); toggleAttended(reg); }}
+                                onClick={(e) => e.stopPropagation()}
+                                style={{ accentColor: '#306CEC', width: '16px', height: '16px', cursor: 'pointer' }}
+                              />
+                            </td>
                             <td className="px-4 py-3 font-medium text-gray-900 cursor-pointer" onClick={() => setSelectedRoadshowReg(selectedRoadshowReg?.id === reg.id ? null : reg)}>{reg.name}</td>
                             <td className="px-4 py-3 text-gray-600 cursor-pointer" onClick={() => setSelectedRoadshowReg(selectedRoadshowReg?.id === reg.id ? null : reg)}>{reg.email}</td>
                             <td className="px-4 py-3 text-gray-600 cursor-pointer" onClick={() => setSelectedRoadshowReg(selectedRoadshowReg?.id === reg.id ? null : reg)}>
@@ -1276,14 +1285,6 @@ const sendApprovalEmailWithTicket = async (submission, ticketId) => {
                             <td className="px-4 py-3 text-gray-600 cursor-pointer" onClick={() => setSelectedRoadshowReg(selectedRoadshowReg?.id === reg.id ? null : reg)}>{reg.organization}</td>
                             <td className="px-4 py-3 cursor-pointer" onClick={() => setSelectedRoadshowReg(selectedRoadshowReg?.id === reg.id ? null : reg)}><span className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-semibold">{reg.city}</span></td>
                             <td className="px-4 py-3 text-gray-500 text-xs cursor-pointer" onClick={() => setSelectedRoadshowReg(selectedRoadshowReg?.id === reg.id ? null : reg)}>{reg.submittedAt?.toDate ? reg.submittedAt.toDate().toLocaleDateString() : '—'}</td>
-                            <td className="px-4 py-3">
-                              <button
-                                onClick={(e) => { e.stopPropagation(); toggleAttended(reg); }}
-                                className={`px-2 py-1 rounded-full text-xs font-semibold transition-colors ${reg.attended ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500 hover:bg-emerald-50 hover:text-emerald-600'}`}
-                              >
-                                {reg.attended ? 'Attended ✓' : 'Mark Attended'}
-                              </button>
-                            </td>
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-2">
                                 <button
@@ -1305,7 +1306,7 @@ const sendApprovalEmailWithTicket = async (submission, ticketId) => {
                           </tr>
                           {selectedRoadshowReg?.id === reg.id && (
                             <tr key={`${reg.id}-detail`} className="bg-indigo-50 border-t">
-                              <td colSpan={7} className="px-6 py-4">
+                              <td colSpan={8} className="px-6 py-4">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                                   {reg.whatYouDo && (
                                     <div>
