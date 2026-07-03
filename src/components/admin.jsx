@@ -1211,6 +1211,9 @@ const sendApprovalEmailWithTicket = async (submission, ticketId) => {
               {/* View toggle */}
               <div className="flex gap-2 mb-5">
                 <button onClick={() => setRoadshowView('registrations')} className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${roadshowView === 'registrations' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>Registrations</button>
+                <button onClick={() => setRoadshowView('attendees')} className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${roadshowView === 'attendees' ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+                  Attendees ({roadshowRegs.filter(r => r.attended).length})
+                </button>
                 <button onClick={() => setRoadshowView('marketing')} className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${roadshowView === 'marketing' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>Marketing</button>
               </div>
 
@@ -1227,6 +1230,47 @@ const sendApprovalEmailWithTicket = async (submission, ticketId) => {
                         <p className="text-xs text-gray-500 mt-1">{label}</p>
                       </div>
                     ))}
+                  </div>
+                );
+              })()}
+
+              {roadshowView === 'attendees' && (() => {
+                const attendees = roadshowRegs.filter(r => r.attended);
+                if (attendees.length === 0) return (
+                  <div className="text-center py-16">
+                    <p className="text-gray-400 text-4xl mb-3">☑</p>
+                    <p className="text-gray-500 text-sm">No attendees marked yet. Check the box next to a registrant's name to mark them as attended.</p>
+                  </div>
+                );
+                return (
+                  <div className="overflow-x-auto">
+                    <p className="text-sm text-gray-500 mb-3">{attendees.length} attendee{attendees.length !== 1 ? 's' : ''} checked in</p>
+                    <table className="min-w-full text-sm">
+                      <thead className="bg-emerald-50">
+                        <tr>
+                          <th className="px-4 py-3 text-left font-semibold text-emerald-700">#</th>
+                          <th className="px-4 py-3 text-left font-semibold text-emerald-700">Name</th>
+                          <th className="px-4 py-3 text-left font-semibold text-emerald-700">Email</th>
+                          <th className="px-4 py-3 text-left font-semibold text-emerald-700">Phone</th>
+                          <th className="px-4 py-3 text-left font-semibold text-emerald-700">Organization</th>
+                          <th className="px-4 py-3 text-left font-semibold text-emerald-700">City</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {attendees.map((reg, idx) => (
+                          <tr key={reg.id} className={`border-t ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-emerald-50 transition-colors`}>
+                            <td className="px-4 py-3 text-gray-400 text-xs">{idx + 1}</td>
+                            <td className="px-4 py-3 font-medium text-gray-900">{reg.name}</td>
+                            <td className="px-4 py-3 text-gray-600">{reg.email}</td>
+                            <td className="px-4 py-3 text-gray-600">
+                              <a href={`https://wa.me/${reg.phone?.replace(/[\s+\-()]/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">{reg.phone}</a>
+                            </td>
+                            <td className="px-4 py-3 text-gray-600">{reg.organization}</td>
+                            <td className="px-4 py-3"><span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-semibold">{reg.city}</span></td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 );
               })()}
