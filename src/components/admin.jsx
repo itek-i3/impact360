@@ -137,6 +137,14 @@ const AdminDashboard = () => {
   };
 
 
+  const toggleAttended = async (reg) => {
+    try {
+      await updateDoc(doc(db, 'roadshowRegistrations', reg.id), { attended: !reg.attended });
+    } catch (err) {
+      showNotification('Failed to update attendance', 'error');
+    }
+  };
+
   const resetAllInviteSent = async () => {
     const marked = roadshowRegs.filter(r => r.inviteSent);
     if (marked.length === 0) { showNotification('Nothing to reset', 'error'); return; }
@@ -1243,6 +1251,7 @@ const sendApprovalEmailWithTicket = async (submission, ticketId) => {
                         <th className="px-4 py-3 text-left font-semibold text-gray-600">Organization</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-600">City</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-600">Date</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-600">Attended</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-600">Actions</th>
                       </tr>
                     </thead>
@@ -1258,6 +1267,14 @@ const sendApprovalEmailWithTicket = async (submission, ticketId) => {
                             <td className="px-4 py-3 text-gray-600 cursor-pointer" onClick={() => setSelectedRoadshowReg(selectedRoadshowReg?.id === reg.id ? null : reg)}>{reg.organization}</td>
                             <td className="px-4 py-3 cursor-pointer" onClick={() => setSelectedRoadshowReg(selectedRoadshowReg?.id === reg.id ? null : reg)}><span className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-semibold">{reg.city}</span></td>
                             <td className="px-4 py-3 text-gray-500 text-xs cursor-pointer" onClick={() => setSelectedRoadshowReg(selectedRoadshowReg?.id === reg.id ? null : reg)}>{reg.submittedAt?.toDate ? reg.submittedAt.toDate().toLocaleDateString() : '—'}</td>
+                            <td className="px-4 py-3">
+                              <button
+                                onClick={(e) => { e.stopPropagation(); toggleAttended(reg); }}
+                                className={`px-2 py-1 rounded-full text-xs font-semibold transition-colors ${reg.attended ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500 hover:bg-emerald-50 hover:text-emerald-600'}`}
+                              >
+                                {reg.attended ? 'Attended ✓' : 'Mark Attended'}
+                              </button>
+                            </td>
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-2">
                                 <button
