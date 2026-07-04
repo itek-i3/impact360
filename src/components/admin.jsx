@@ -119,6 +119,8 @@ const AdminDashboard = () => {
   const [showManualAdd, setShowManualAdd] = useState(false);
   const [manualForm, setManualForm] = useState({ name: '', email: '', phone: '', organization: '', city: '' });
   const [manualSaving, setManualSaving] = useState(false);
+  const [editingAttendeeId, setEditingAttendeeId] = useState(null);
+  const [editAttendeeForm, setEditAttendeeForm] = useState({});
 
   const addManualAttendee = async () => {
     if (!manualForm.name.trim()) return;
@@ -137,6 +139,23 @@ const AdminDashboard = () => {
       showNotification('Failed to add attendee', 'error');
     }
     setManualSaving(false);
+  };
+
+  const saveAttendeeEdit = async () => {
+    if (!editingAttendeeId || !editAttendeeForm.name?.trim()) return;
+    try {
+      await updateDoc(doc(db, 'roadshowRegistrations', editingAttendeeId), {
+        name: editAttendeeForm.name,
+        email: editAttendeeForm.email,
+        phone: editAttendeeForm.phone,
+        organization: editAttendeeForm.organization,
+        city: editAttendeeForm.city,
+      });
+      setEditingAttendeeId(null);
+      showNotification('Attendee updated', 'success');
+    } catch (err) {
+      showNotification('Failed to update attendee', 'error');
+    }
   };
 
   const deleteRoadshowReg = async () => {
@@ -1366,27 +1385,68 @@ const sendApprovalEmailWithTicket = async (submission, ticketId) => {
                               <th className="px-4 py-3 text-left font-semibold text-emerald-700">Organization</th>
                               <th className="px-4 py-3 text-left font-semibold text-emerald-700">City</th>
                               <th className="px-4 py-3 text-left font-semibold text-emerald-700">Type</th>
+                              <th className="px-4 py-3 text-left font-semibold text-emerald-700"></th>
                             </tr>
                           </thead>
                           <tbody>
-                            {attendees.map((reg, idx) => (
-                              <tr key={reg.id} className={`border-t ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-emerald-50 transition-colors`}>
-                                <td className="px-4 py-3 text-gray-400 text-xs">{idx + 1}</td>
-                                <td className="px-4 py-3 font-medium text-gray-900">{reg.name}</td>
-                                <td className="px-4 py-3 text-gray-600">{reg.email}</td>
-                                <td className="px-4 py-3 text-gray-600">
-                                  <a href={`https://wa.me/${reg.phone?.replace(/[\s+\-()]/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">{reg.phone}</a>
-                                </td>
-                                <td className="px-4 py-3 text-gray-600">{reg.organization}</td>
-                                <td className="px-4 py-3"><span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-semibold">{reg.city}</span></td>
-                                <td className="px-4 py-3">
-                                  {reg.manualEntry
-                                    ? <span className="px-2 py-1 bg-orange-100 text-orange-600 rounded-full text-xs font-semibold">Walk-in</span>
-                                    : <span className="px-2 py-1 bg-gray-100 text-gray-500 rounded-full text-xs font-semibold">Online</span>
-                                  }
-                                </td>
-                              </tr>
-                            ))}
+                            {attendees.map((reg, idx) => {
+                              const isEditing = editingAttendeeId === reg.id;
+                              const inputCls = "w-full px-2 py-1 border border-emerald-300 rounded text-sm focus:ring-1 focus:ring-emerald-400 focus:border-transparent";
+                              return (
+                                <tr key={reg.id} className={`border-t ${isEditing ? 'bg-emerald-50' : idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-emerald-50 transition-colors`}>
+                                  <td className="px-4 py-3 text-gray-400 text-xs">{idx + 1}</td>
+                                  <td className="px-4 py-3 font-medium text-gray-900">
+                                    {isEditing
+                                      ? <input className={inputCls} value={editAttendeeForm.name} onChange={e => setEditAttendeeForm(f => ({ ...f, name: e.target.value }))} placeholder="Name" />
+                                      : reg.name}
+                                  </td>
+                                  <td className="px-4 py-3 text-gray-600">
+                                    {isEditing
+                                      ? <input className={inputCls} value={editAttendeeForm.email} onChange={e => setEditAttendeeForm(f => ({ ...f, email: e.target.value }))} placeholder="Email" />
+                                      : reg.email}
+                                  </td>
+                                  <td className="px-4 py-3 text-gray-600">
+                                    {isEditing
+                                      ? <input className={inputCls} value={editAttendeeForm.phone} onChange={e => setEditAttendeeForm(f => ({ ...f, phone: e.target.value }))} placeholder="Phone" />
+                                      : <a href={`https://wa.me/${reg.phone?.replace(/[\s+\-()]/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">{reg.phone}</a>}
+                                  </td>
+                                  <td className="px-4 py-3 text-gray-600">
+                                    {isEditing
+                                      ? <input className={inputCls} value={editAttendeeForm.organization} onChange={e => setEditAttendeeForm(f => ({ ...f, organization: e.target.value }))} placeholder="Organization" />
+                                      : reg.organization}
+                                  </td>
+                                  <td className="px-4 py-3">
+                                    {isEditing
+                                      ? <select className={inputCls} value={editAttendeeForm.city} onChange={e => setEditAttendeeForm(f => ({ ...f, city: e.target.value }))}>
+                                          <option value="">Select city</option>
+                                          {allCities.map(c => <option key={c} value={c}>{c}</option>)}
+                                        </select>
+                                      : <span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-semibold">{reg.city}</span>}
+                                  </td>
+                                  <td className="px-4 py-3">
+                                    {reg.manualEntry
+                                      ? <span className="px-2 py-1 bg-orange-100 text-orange-600 rounded-full text-xs font-semibold">Walk-in</span>
+                                      : <span className="px-2 py-1 bg-gray-100 text-gray-500 rounded-full text-xs font-semibold">Online</span>}
+                                  </td>
+                                  <td className="px-4 py-3">
+                                    {isEditing ? (
+                                      <div className="flex gap-1">
+                                        <button onClick={saveAttendeeEdit} className="px-2 py-1 bg-emerald-600 text-white text-xs font-semibold rounded hover:bg-emerald-700 transition-colors">Save</button>
+                                        <button onClick={() => setEditingAttendeeId(null)} className="px-2 py-1 bg-gray-100 text-gray-600 text-xs font-semibold rounded hover:bg-gray-200 transition-colors">Cancel</button>
+                                      </div>
+                                    ) : (
+                                      <button
+                                        onClick={() => { setEditingAttendeeId(reg.id); setEditAttendeeForm({ name: reg.name || '', email: reg.email || '', phone: reg.phone || '', organization: reg.organization || '', city: reg.city || '' }); }}
+                                        className="p-1.5 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded transition-colors"
+                                        title="Edit"
+                                      >
+                                        <Edit size={14} />
+                                      </button>
+                                    )}
+                                  </td>
+                                </tr>
+                              );
+                            })}
                           </tbody>
                         </table>
                       </div>
