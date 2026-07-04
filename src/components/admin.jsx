@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Search, Check, X, Eye, Edit, Trash2, RefreshCw, Mail, Clock, CheckCircle, XCircle, LogOut, Lock, Menu } from 'lucide-react';
-import { 
-  collection, 
-  getDocs, 
-  doc, 
-  updateDoc, 
-  deleteDoc, 
-  query, 
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+  addDoc,
+  query,
   orderBy,
-  onSnapshot
+  onSnapshot,
+  serverTimestamp
 } from 'firebase/firestore';
 import { 
   signInWithEmailAndPassword, 
@@ -114,6 +116,28 @@ const AdminDashboard = () => {
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [clearing, setClearing] = useState(false);
   const [regToDelete, setRegToDelete] = useState(null);
+  const [showManualAdd, setShowManualAdd] = useState(false);
+  const [manualForm, setManualForm] = useState({ name: '', email: '', phone: '', organization: '', city: '' });
+  const [manualSaving, setManualSaving] = useState(false);
+
+  const addManualAttendee = async () => {
+    if (!manualForm.name.trim()) return;
+    setManualSaving(true);
+    try {
+      await addDoc(collection(db, 'roadshowRegistrations'), {
+        ...manualForm,
+        attended: true,
+        manualEntry: true,
+        submittedAt: serverTimestamp(),
+      });
+      setManualForm({ name: '', email: '', phone: '', organization: '', city: '' });
+      setShowManualAdd(false);
+      showNotification('Attendee added', 'success');
+    } catch (err) {
+      showNotification('Failed to add attendee', 'error');
+    }
+    setManualSaving(false);
+  };
 
   const deleteRoadshowReg = async () => {
     if (!regToDelete) return;
@@ -1236,41 +1260,137 @@ const sendApprovalEmailWithTicket = async (submission, ticketId) => {
 
               {roadshowView === 'attendees' && (() => {
                 const attendees = roadshowRegs.filter(r => r.attended);
-                if (attendees.length === 0) return (
-                  <div className="text-center py-16">
-                    <p className="text-gray-400 text-4xl mb-3">☑</p>
-                    <p className="text-gray-500 text-sm">No attendees marked yet. Check the box next to a registrant's name to mark them as attended.</p>
-                  </div>
-                );
+                const allCities = ['Nakuru', 'Eldoret', 'Kisumu', 'Nairobi', 'Mombasa', 'Arusha', 'Kigali', 'Addis Ababa', 'Kampala'];
                 return (
-                  <div className="overflow-x-auto">
-                    <p className="text-sm text-gray-500 mb-3">{attendees.length} attendee{attendees.length !== 1 ? 's' : ''} checked in</p>
-                    <table className="min-w-full text-sm">
-                      <thead className="bg-emerald-50">
-                        <tr>
-                          <th className="px-4 py-3 text-left font-semibold text-emerald-700">#</th>
-                          <th className="px-4 py-3 text-left font-semibold text-emerald-700">Name</th>
-                          <th className="px-4 py-3 text-left font-semibold text-emerald-700">Email</th>
-                          <th className="px-4 py-3 text-left font-semibold text-emerald-700">Phone</th>
-                          <th className="px-4 py-3 text-left font-semibold text-emerald-700">Organization</th>
-                          <th className="px-4 py-3 text-left font-semibold text-emerald-700">City</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {attendees.map((reg, idx) => (
-                          <tr key={reg.id} className={`border-t ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-emerald-50 transition-colors`}>
-                            <td className="px-4 py-3 text-gray-400 text-xs">{idx + 1}</td>
-                            <td className="px-4 py-3 font-medium text-gray-900">{reg.name}</td>
-                            <td className="px-4 py-3 text-gray-600">{reg.email}</td>
-                            <td className="px-4 py-3 text-gray-600">
-                              <a href={`https://wa.me/${reg.phone?.replace(/[\s+\-()]/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">{reg.phone}</a>
-                            </td>
-                            <td className="px-4 py-3 text-gray-600">{reg.organization}</td>
-                            <td className="px-4 py-3"><span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-semibold">{reg.city}</span></td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                  <div>
+                    {/* Header row */}
+                    <div className="flex items-center justify-between mb-4">
+                      <p className="text-sm text-gray-500">{attendees.length} attendee{attendees.length !== 1 ? 's' : ''} checked in</p>
+                      <button
+                        onClick={() => setShowManualAdd(v => !v)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg hover:bg-emerald-700 transition-colors"
+                      >
+                        <span className="text-base leading-none">+</span> Add Attendee
+                      </button>
+                    </div>
+
+                    {/* Manual add form */}
+                    {showManualAdd && (
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-5">
+                        <p className="text-sm font-semibold text-emerald-800 mb-3">Add Walk-in Attendee</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">Name <span className="text-red-400">*</span></label>
+                            <input
+                              type="text"
+                              placeholder="Full name"
+                              value={manualForm.name}
+                              onChange={e => setManualForm(f => ({ ...f, name: e.target.value }))}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-400 focus:border-transparent"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">Email</label>
+                            <input
+                              type="email"
+                              placeholder="email@example.com"
+                              value={manualForm.email}
+                              onChange={e => setManualForm(f => ({ ...f, email: e.target.value }))}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-400 focus:border-transparent"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">Phone</label>
+                            <input
+                              type="tel"
+                              placeholder="+254..."
+                              value={manualForm.phone}
+                              onChange={e => setManualForm(f => ({ ...f, phone: e.target.value }))}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-400 focus:border-transparent"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">Organization</label>
+                            <input
+                              type="text"
+                              placeholder="Company / School"
+                              value={manualForm.organization}
+                              onChange={e => setManualForm(f => ({ ...f, organization: e.target.value }))}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-400 focus:border-transparent"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">City</label>
+                            <select
+                              value={manualForm.city}
+                              onChange={e => setManualForm(f => ({ ...f, city: e.target.value }))}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white"
+                            >
+                              <option value="">Select city</option>
+                              {allCities.map(c => <option key={c} value={c}>{c}</option>)}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="flex gap-2 mt-4">
+                          <button
+                            onClick={addManualAttendee}
+                            disabled={manualSaving || !manualForm.name.trim()}
+                            className="px-4 py-2 bg-emerald-600 text-white text-xs font-semibold rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                          >
+                            {manualSaving ? 'Saving...' : 'Save Attendee'}
+                          </button>
+                          <button
+                            onClick={() => { setShowManualAdd(false); setManualForm({ name: '', email: '', phone: '', organization: '', city: '' }); }}
+                            className="px-4 py-2 bg-gray-100 text-gray-600 text-xs font-semibold rounded-lg hover:bg-gray-200 transition-colors"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {attendees.length === 0 ? (
+                      <div className="text-center py-16">
+                        <p className="text-gray-400 text-4xl mb-3">☑</p>
+                        <p className="text-gray-500 text-sm">No attendees yet. Check boxes in Registrations or add a walk-in above.</p>
+                      </div>
+                    ) : (
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full text-sm">
+                          <thead className="bg-emerald-50">
+                            <tr>
+                              <th className="px-4 py-3 text-left font-semibold text-emerald-700">#</th>
+                              <th className="px-4 py-3 text-left font-semibold text-emerald-700">Name</th>
+                              <th className="px-4 py-3 text-left font-semibold text-emerald-700">Email</th>
+                              <th className="px-4 py-3 text-left font-semibold text-emerald-700">Phone</th>
+                              <th className="px-4 py-3 text-left font-semibold text-emerald-700">Organization</th>
+                              <th className="px-4 py-3 text-left font-semibold text-emerald-700">City</th>
+                              <th className="px-4 py-3 text-left font-semibold text-emerald-700">Type</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {attendees.map((reg, idx) => (
+                              <tr key={reg.id} className={`border-t ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-emerald-50 transition-colors`}>
+                                <td className="px-4 py-3 text-gray-400 text-xs">{idx + 1}</td>
+                                <td className="px-4 py-3 font-medium text-gray-900">{reg.name}</td>
+                                <td className="px-4 py-3 text-gray-600">{reg.email}</td>
+                                <td className="px-4 py-3 text-gray-600">
+                                  <a href={`https://wa.me/${reg.phone?.replace(/[\s+\-()]/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">{reg.phone}</a>
+                                </td>
+                                <td className="px-4 py-3 text-gray-600">{reg.organization}</td>
+                                <td className="px-4 py-3"><span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-semibold">{reg.city}</span></td>
+                                <td className="px-4 py-3">
+                                  {reg.manualEntry
+                                    ? <span className="px-2 py-1 bg-orange-100 text-orange-600 rounded-full text-xs font-semibold">Walk-in</span>
+                                    : <span className="px-2 py-1 bg-gray-100 text-gray-500 rounded-full text-xs font-semibold">Online</span>
+                                  }
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
                 );
               })()}
