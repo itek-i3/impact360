@@ -102,7 +102,7 @@ const towns = [
   { name: "Eldoret", img: "/events/Eldoret.jpg", date: "May 23, 2026", status: "concluded", formUrl: "https://forms.gle/FoEdvsEvgt3ohDm48" },
   { name: "Kisumu", img: "/events/Kisumu.jpg", date: "July 4th, 2026", venue: "Baraza Media Lab", time: "12:00 PM", status: "past", formUrl: null },
   { name: "Nairobi", img: "/events/Nairobi.jpg", date: "Coming Soon", status: "tba", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfBnrBvB8v6THmM1-_bzauyY3lymRe7ULXrVC9iHUn1TXy4Hg/viewform?usp=publish-editor" },
-  { name: "Mombasa", img: "/events/Mombasa.jpg", date: "October 3rd, 2026", venue: "Venue TBA", time: "12:00 PM", status: "next", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfOYPX3TuQl14679C2UaAXElzUcP5x4iVd0tJrQAIlB8nQa-w/viewform?usp=publish-editor" },
+  { name: "Mombasa", img: "/events/Mombasa.jpg", date: "October 3rd, 2026", venue: "Baraza Media Lab", time: "12:00 PM", status: "next", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfOYPX3TuQl14679C2UaAXElzUcP5x4iVd0tJrQAIlB8nQa-w/viewform?usp=publish-editor" },
   { name: "Arusha", img: "/events/Arusha.jpg", date: "Coming Soon", status: "tba", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLScbaFJyZ6az4BkW93Of8YHi5sRSCmkeqTzanJDQcoXJibV_RQ/viewform?usp=publish-editor" },
   { name: "Kigali", img: "/events/Kigali.jpg", date: "Coming Soon", status: "tba", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSeqU-HkwV1JpShk-Ucme6DcusnA23L7XuPt6eebuZvxSjQpBg/viewform?usp=publish-editor" },
   { name: "Addis Ababa", img: "/events/Addis ababa.jpg", date: "Coming Soon", status: "tba", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSf-NKlWnfDjdJOttoQIx0Ff3Ix97WJju0DV2qeRCkDI5PBN3w/viewform?usp=publish-editor" },
@@ -797,7 +797,7 @@ export default function RoadshowPage() {
                 October 3rd, 2026
               </div>
               <div className="inline-block bg-[#306CEC]/15 border border-[#306CEC]/30 text-[#306CEC] text-sm font-bold px-4 py-2 rounded-full" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                Venue TBA
+                Baraza Media Lab
               </div>
             </div>
             <p className="text-base md:text-lg mb-10 max-w-lg" style={{ fontFamily: "'DM Sans', sans-serif", color: darkMode ? "rgba(255,255,255,0.55)" : "rgba(10,10,20,0.6)", lineHeight: 1.75 }}>
