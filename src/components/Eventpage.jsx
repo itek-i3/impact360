@@ -33,6 +33,7 @@ const stories = [
     vol: "No. 02",
     date: "May 23, 2026",
     venue: "Comfy Inn",
+
     city: "Eldoret",
     country: "Kenya",
     headline: "The north\nhas builders.",
@@ -49,6 +50,28 @@ const stories = [
       { src: "/eldoret/Eldoret3.jpg", caption: "Learning by doing" },
       { src: "/eldoret/Eldoret4.jpg", caption: "Eldoret showed up" },
       { src: "/eldoret/Eldoret5.jpg", caption: "Still talking outside" },
+    ],
+  },
+  {
+    vol: "No. 03",
+    date: "July 4th, 2026",
+    venue: "Baraza Media Lab",
+    city: "Kisumu",
+    country: "Kenya",
+    headline: "The lake\ncity showed up.",
+    intro: "On 4 July 2026, Baraza Media Lab in Kisumu became the room where western Kenya's builders, dreamers, and doers gathered to prove that innovation doesn't only happen near the coast.",
+    introColor: "#306CEC",
+    body: "The day opened with an electric networking session, setting the tone for what would become one of the most engaged roadshow stops yet. Participants moved into structured roundtables exploring the unique challenges and opportunities of building in western Kenya — from access to capital, to reaching customers in mid-tier cities. A high-energy Founder Hotseat followed, where entrepreneurs shared raw, unfiltered accounts of building businesses away from the spotlight of Nairobi. The afternoon brought The Great Debate to Kisumu, with speakers and participants sparring over what inclusive innovation really looks like in a city with this much potential. An Open Mic session wrapped the day, with attendees — many of them first-time event participants — stepping up to share ideas, ask bold questions, and connect with peers. Kisumu didn't just attend the roadshow. It added a chapter.",
+    pullQuote: "Kisumu has always had the talent. Now it has the room.",
+    stats: [{ v: "150+", l: "people showed up" }, { v: "7", l: "speakers on stage" }, { v: "4", l: "sessions" }],
+    galleryUrl: "#",
+    cover: "/Kisumu/S43A9040.jpg",
+    photos: [
+      { src: "/Kisumu/S43A9040.jpg", caption: "Baraza Media Lab set up for the day" },
+      { src: "/Kisumu/S43A0042.jpg", caption: "Connections made at Baraza" },
+      { src: "/Kisumu/S43A0049.jpg", caption: "Voices from Kisumu" },
+      { src: "/Kisumu/S43A9123.jpg", caption: "Ideas in the round" },
+      { src: "/Kisumu/S43A9127.jpg", caption: "The Hotseat in action" },
     ],
   },
 ];
@@ -159,6 +182,22 @@ function Story({ s, i, darkMode }) {
         </div>
       </motion.div>
 
+      {/* Stats */}
+      {s.stats && (
+        <motion.div
+          initial="hidden" whileInView="show" viewport={vp}
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}
+          style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 80px 48px", display: "flex", gap: "40px", flexWrap: "wrap" }}
+        >
+          {s.stats.map((st, si) => (
+            <motion.div key={si} variants={fadeUp}>
+              <p style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, fontFamily: "'League Spartan', sans-serif", color: "#306CEC", margin: 0, lineHeight: 1 }}>{st.v}</p>
+              <p style={{ fontSize: "12px", color: c.meta, fontFamily: "'DM Sans', sans-serif", margin: "4px 0 0", textTransform: "uppercase", letterSpacing: "0.1em" }}>{st.l}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
+
       {/* Photo strip — photos stagger in */}
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 80px" }}>
         <motion.div
@@ -206,8 +245,8 @@ function Story({ s, i, darkMode }) {
 
 export default function EventsPage() {
   const { darkMode } = useDarkMode();
-  const [kisumuModal, setKisumuModal] = React.useState(false);
-  const kisumuTown = { name: "Kisumu", img: "/events/Kisumu.jpg", date: "July 4th, 2026", status: "next" };
+  const [mombasaModal, setMombasaModal] = React.useState(false);
+  const mombasa = { name: "Mombasa", img: "/events/Mombasa.jpg", date: "October 3rd, 2026", venue: "Baraza Media Lab", time: "12:00 PM", status: "next" };
   const heroRef = React.useRef(null);
   const { scrollY } = useScroll();
   const heroY = useTransform(scrollY, [0, 600], [0, 160]);
@@ -269,18 +308,21 @@ export default function EventsPage() {
       <main style={{ width: "100%" }}>
         {stories.map((s, i) => <Story key={s.city} s={s} i={i} darkMode={darkMode} />)}
 
-        {/* Kisumu */}
+        {/* Mombasa — next stop */}
         <motion.div {...appear} style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 80px 100px" }}>
           <p style={{ fontSize: "11px", color: "#306CEC", fontFamily: "'DM Sans', sans-serif", fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: "12px" }}>
-            No. 03 &nbsp;·&nbsp; Coming up
+            No. 04 &nbsp;·&nbsp; Next stop
           </p>
           <h3 style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)", fontWeight: 800, fontFamily: "'League Spartan', sans-serif", color: darkMode ? "#fff" : "#0a0a0a", margin: "0 0 10px", letterSpacing: "-0.025em", lineHeight: 1 }}>
-            Kisumu, July 4.
+            Mombasa, October 3.
           </h3>
-          <p style={{ fontSize: "14px", color: darkMode ? "rgba(255,255,255,0.38)" : "rgba(0,0,0,0.45)", fontFamily: "'DM Sans', sans-serif", margin: "0 0 28px", fontStyle: "italic" }}>
+          <p style={{ fontSize: "14px", color: darkMode ? "rgba(255,255,255,0.38)" : "rgba(0,0,0,0.45)", fontFamily: "'DM Sans', sans-serif", margin: "0 0 6px", fontStyle: "italic" }}>
             The next page is unwritten. Come help us write it.
           </p>
-          <button onClick={() => setKisumuModal(true)}
+          <p style={{ fontSize: "13px", color: darkMode ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.35)", fontFamily: "'DM Sans', sans-serif", margin: "0 0 28px" }}>
+            Baraza Media Lab · 12:00 PM
+          </p>
+          <button onClick={() => setMombasaModal(true)}
             style={{ display: "inline-flex", alignItems: "center", gap: "7px", border: `1px solid ${darkMode ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.2)"}`, color: darkMode ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)", padding: "11px 22px", borderRadius: "100px", fontFamily: "'DM Sans', sans-serif", fontWeight: 500, fontSize: "13px", background: "none", cursor: "pointer" }}>
             Register now <ArrowRight size={13} />
           </button>
@@ -288,7 +330,7 @@ export default function EventsPage() {
       </main>
 
       <AnimatePresence>
-        {kisumuModal && <RegisterModal town={kisumuTown} darkMode={true} onClose={() => setKisumuModal(false)} />}
+        {mombasaModal && <RegisterModal town={mombasa} darkMode={true} onClose={() => setMombasaModal(false)} />}
       </AnimatePresence>
 
       <Footer />
