@@ -18,7 +18,7 @@ const stories = [
     introColor: "#306CEC",
     body: "The event began with networking and introductions before moving into RoundXchange, a gamified interaction session where participants exchanged ideas, tackled mini-challenges, and explored thought-provoking topics in small groups. Following a networking break, the audience engaged in The Great Debate, where speakers and participants discussed key issues through structured and solution-focused conversations. The energy continued into the Open Mic session, giving attendees an opportunity to share perspectives, ask questions, and contribute directly to the discussion. The day concluded by highlighting key insights and encouraging participants to stay connected as the roadshow journey continues in other locations. The Nakuru Roadshow successfully demonstrated the power of conversation, collaboration, and community-driven storytelling.",
     pullQuote: "This isn't an event. It's a live episode in an ongoing story.",
-    stats: [{ v: "120+", l: "people showed up" }, { v: "6", l: "speakers on stage" }, { v: "4", l: "sessions" }],
+    stats: [{ v: "50", l: "people showed up" }, { v: "6", l: "speakers on stage" }, { v: "4", l: "sessions" }],
     galleryUrl: "https://aroni6.pixieset.com/impact360roadshownakuruedition-1/",
     cover: "/Nakuru/mainNakuru.jpg",
     photos: [
@@ -41,7 +41,7 @@ const stories = [
     introColor: "#306CEC",
     body: "The morning opened with Round Exchange, an unfiltered session on ecosystem realities, innovation gaps, and what founders in emerging markets actually need. No slides. No rehearsed answers. The Founder Hotseat followed: honest accounts of building, failing, pivoting, and pushing through in markets that don't always show up on startup maps. The afternoon widened into Architects of the Future, where founders, operators, creatives, and ecosystem leaders asked harder questions about leadership, opportunity, and what comes next for African cities beyond Nairobi. By the time the room wrapped up, it had produced something harder to measure than metrics: real connections, and the quiet conviction that Eldoret was already building something worth watching.",
     pullQuote: "The north didn't need permission. It needed a room.",
-    stats: [{ v: "180+", l: "people showed up" }, { v: "8", l: "voices on stage" }, { v: "5", l: "sessions" }],
+    stats: [{ v: "45", l: "people showed up" }, { v: "8", l: "voices on stage" }, { v: "5", l: "sessions" }],
     galleryUrl: "https://i3studios73.pixieset.com/eldoretroadshow/",
     cover: "/eldoret/mainEldoret.jpg",
     photos: [
@@ -63,8 +63,8 @@ const stories = [
     introColor: "#306CEC",
     body: "The day opened with an electric networking session, setting the tone for what would become one of the most engaged roadshow stops yet. Participants moved into structured roundtables exploring the unique challenges and opportunities of building in western Kenya — from access to capital, to reaching customers in mid-tier cities. A high-energy Founder Hotseat followed, where entrepreneurs shared raw, unfiltered accounts of building businesses away from the spotlight of Nairobi. The afternoon brought The Great Debate to Kisumu, with speakers and participants sparring over what inclusive innovation really looks like in a city with this much potential. An Open Mic session wrapped the day, with attendees — many of them first-time event participants — stepping up to share ideas, ask bold questions, and connect with peers. Kisumu didn't just attend the roadshow. It added a chapter.",
     pullQuote: "Kisumu has always had the talent. Now it has the room.",
-    stats: [{ v: "150+", l: "people showed up" }, { v: "7", l: "speakers on stage" }, { v: "4", l: "sessions" }],
-    galleryUrl: "#",
+    stats: [{ v: "38", l: "people showed up" }, { v: "7", l: "speakers on stage" }, { v: "4", l: "sessions" }],
+    galleryUrl: "https://i3studios27.pixieset.com/kisumuroadshow/roundexcgange/",
     cover: "/Kisumu/S43A9040.jpg",
     photos: [
       { src: "/Kisumu/S43A9040.jpg", caption: "Baraza Media Lab set up for the day" },

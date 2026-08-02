@@ -216,7 +216,7 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
           {[
             { value: 10, label: "Founders Supported" },
-            { value: 1,  label: "Cities Visited" },
+            { value: 3,  label: "Cities Visited" },
             { value: 3,  label: "Programs Running" },
             { value: 1,  label: "Strategic Partner" },
           ].map((stat, i) => (
