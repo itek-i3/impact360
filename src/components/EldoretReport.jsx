@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MapPin, Users, TrendingUp, Target, BarChart3,
-  CheckCircle, Clock, Globe, Lightbulb, Building2,
+  CheckCircle, Globe, Lightbulb, Building2,
   ArrowRight, ChevronDown, ChevronUp, Rocket,
   GraduationCap, Handshake, Megaphone, Award,
-  PieChart, Activity, Zap, Heart
+  PieChart, Activity, Zap, Heart, Network, Shield
 } from "lucide-react";
 import { useDarkMode } from "../DarkModeContext";
 import Navbar from "./Navbar";
@@ -14,10 +14,75 @@ import Footer from "./Footer";
 // ─── Data ────────────────────────────────────────────────────────────────────
 
 const impactMetrics = [
-  { label: "Founders Reached", value: "150+", icon: Users, color: "#306CEC" },
-  { label: "Pitches Delivered", value: "32", icon: Megaphone, color: "#10B981" },
-  { label: "Mentorship Sessions", value: "48", icon: GraduationCap, color: "#F59E0B" },
-  { label: "Partnerships Formed", value: "12", icon: Handshake, color: "#306CEC" },
+  { label: "Attendees", value: "45", icon: Users, color: "#306CEC" },
+  { label: "Economic Systems Mapped", value: "5", icon: Network, color: "#10B981" },
+  { label: "Community Trust Score", value: "90%", icon: Shield, color: "#F59E0B" },
+  { label: "Partner Organizations", value: "10+", icon: Handshake, color: "#306CEC" },
+];
+
+const ecosystemDashboard = [
+  { name: "Community Trust Networks", percentage: 90, color: "#10B981" },
+  { name: "Entrepreneurial Activity", percentage: 75, color: "#306CEC" },
+  { name: "Informal Capital Availability", percentage: 75, color: "#8B5CF6" },
+  { name: "University Talent Production", percentage: 75, color: "#F59E0B" },
+  { name: "Technology Awareness", percentage: 75, color: "#06B6D4" },
+  { name: "Market Opportunity", percentage: 75, color: "#10B981" },
+  { name: "Technology Adoption", percentage: 50, color: "#F59E0B" },
+  { name: "Startup Support Infrastructure", percentage: 30, color: "#EF4444" },
+  { name: "Formal Capital Accessibility", percentage: 25, color: "#EF4444" },
+];
+
+const systems = [
+  {
+    number: "01",
+    name: "Trust Economy",
+    score: "90%",
+    color: "#10B981",
+    description:
+      "Eldoret's greatest asset is its dense web of community trust networks — informal social capital built through cultural institutions, faith communities, and longstanding trade relationships. At 90%, this is the city's highest-scoring system and forms the foundation for all other economic activity.",
+    insight:
+      "Trust networks already move capital, talent, and information efficiently. Formalizing these channels creates immediate leverage for startup growth.",
+  },
+  {
+    number: "02",
+    name: "Builders Economy",
+    score: "75%",
+    color: "#306CEC",
+    description:
+      "Entrepreneurial activity in Eldoret is vigorous. Founders operate across agribusiness, logistics, education, and trade sectors. The roadshow surface a high density of active builders who have started ventures without institutional support — driven purely by necessity and ambition.",
+    insight:
+      "The builders are already building. What's missing is infrastructure: mentorship, market access, and structured pathways to scale.",
+  },
+  {
+    number: "03",
+    name: "Access Economy",
+    score: "25% formal / 75% informal",
+    color: "#F59E0B",
+    description:
+      "Informal capital — family networks, rotating savings groups (chamas), and peer-to-peer lending — is abundant at 75%. Formal capital, at just 25%, remains extremely thin. No functional angel network or VC presence exists in Eldoret. Most founders have never had a conversation with an institutional investor.",
+    insight:
+      "Bridging the formal capital gap is the single highest-leverage intervention. Even basic financial literacy and investor-readiness programming would unlock existing informal capital flows.",
+  },
+  {
+    number: "04",
+    name: "Digital Economy",
+    score: "75% awareness / 50% adoption",
+    color: "#8B5CF6",
+    description:
+      "Technology awareness is high — founders understand digital tools and their potential. But adoption lags at 50%, held back by connectivity costs, device access, and lack of localized support. University graduates arrive digitally literate; the adoption gap sits in the small business middle layer.",
+    insight:
+      "There is a teachable moment here. A focused digital-tools cohort — tied to real revenue outcomes — would close the awareness-to-adoption gap rapidly.",
+  },
+  {
+    number: "05",
+    name: "Visibility & Storytelling",
+    score: "75%",
+    color: "#06B6D4",
+    description:
+      "Eldoret's ecosystem is poorly documented and underrepresented in national narratives. Despite a 75% market opportunity score, founders lack access to media platforms, content creation skills, and the distribution channels that would tell their stories beyond the county. The roadshow itself became a visibility event.",
+    insight:
+      "Every city needs its own storytellers. Supporting local media creators and documentation projects multiplies the impact of all other investments.",
+  },
 ];
 
 const reportSections = [
@@ -25,54 +90,48 @@ const reportSections = [
     id: "overview",
     title: "Campaign Overview",
     icon: Globe,
-    content: `The Impact360 Decentralization Roadshow landed in Nakuru as part of our mission to bring innovation infrastructure, entrepreneurial support, and tech ecosystem services beyond Nairobi. Nakuru, Kenya's fourth-largest city and a rapidly growing economic hub in the Rift Valley, was chosen for its vibrant youth population, emerging startup scene, and untapped potential for innovation-led growth.`,
-    highlight: "Nakuru: Rift Valley's Innovation Frontier",
+    content: `The Impact360 Decentralization Roadshow landed in Eldoret on the campus of Baraza Media Lab as part of a national mission to activate innovation ecosystems beyond Nairobi. Eldoret — Kenya's fifth-largest city and home to world-class athletics talent — has an entrepreneurial community that punches well above its weight. The roadshow mapped this ecosystem across five economic systems: Trust, Builders, Access, Digital, and Visibility.`,
+    highlight: "Eldoret: Where Champions Build More Than Records",
   },
   {
     id: "objectives",
     title: "Campaign Objectives",
     icon: Target,
     items: [
-      "Map and connect the local entrepreneurial ecosystem in Nakuru County",
-      "Identify high-potential founders and startups for incubation & acceleration",
-      "Deliver practical workshops on business validation, pitching, and fundraising",
-      "Establish partnerships with local universities, hubs, and county government",
-      "Create a replicable decentralization playbook for future county roadshows",
+      "Map Eldoret's entrepreneurial ecosystem across five economic systems",
+      "Surface high-potential founders operating without institutional support",
+      "Identify the critical gaps between informal and formal capital access",
+      "Build cross-sector connections between tech, agri, and trade communities",
+      "Generate a replicable State of Decentralization evidence base for the county",
     ],
   },
   {
     id: "activities",
-    title: "Key Activities & Timeline",
-    icon: Clock,
+    title: "Event Activities",
+    icon: Activity,
     timeline: [
       {
-        phase: "Pre-Event Outreach",
-        date: "Week 1-2",
-        description: "Community mobilization through university partnerships, social media campaigns, and local hub collaborations. Over 500 applications received.",
-        status: "completed",
-      },
-      {
-        phase: "Founder Discovery Day",
-        date: "Day 1",
-        description: "Open pitch sessions where 32 founders presented their ideas to a panel of mentors and investors. Focus areas: AgriTech, FinTech, EdTech, and HealthTech.",
-        status: "completed",
-      },
-      {
-        phase: "Masterclass & Workshops",
-        date: "Day 2",
-        description: "Hands-on workshops covering lean startup methodology, financial modelling, product-market fit, and go-to-market strategies.",
-        status: "completed",
-      },
-      {
         phase: "Ecosystem Roundtable",
-        date: "Day 3",
-        description: "Stakeholder forum with Nakuru County officials, university deans, local business leaders, and ecosystem builders to align on long-term support frameworks.",
+        date: "Morning",
+        description: "Deep-dive roundtable sessions structured around each of the five economic systems. Participants self-identified their ecosystem role and mapped connections to other sectors.",
         status: "completed",
       },
       {
-        phase: "Follow-Up & Incubation Selection",
-        date: "Week 3-4",
-        description: "Evaluation of top founders for Impact360 incubation cohort. 8 startups selected for the accelerator pipeline.",
+        phase: "Networking & Community Building",
+        date: "Mid-Morning",
+        description: "Structured networking designed to surface unexpected connections — pairing founders with potential collaborators, mentors, and resource providers they wouldn't otherwise meet.",
+        status: "completed",
+      },
+      {
+        phase: "Presentations & Panel",
+        date: "Afternoon",
+        description: "Seven speakers from the local ecosystem — founders, investors, and community organizers — shared insights on building in Eldoret. The Hotseat format enabled real-time challenge and debate.",
+        status: "completed",
+      },
+      {
+        phase: "Ecosystem Dashboard Review",
+        date: "Late Afternoon",
+        description: "Collective scoring of the Eldoret ecosystem across nine indicators, creating a live, room-generated snapshot of the city's strengths and gaps.",
         status: "completed",
       },
     ],
@@ -83,27 +142,31 @@ const reportSections = [
     icon: Lightbulb,
     findings: [
       {
-        title: "Untapped Talent Pool",
-        description: "Nakuru hosts 6+ universities and technical colleges producing graduates with strong technical skills but limited access to startup support systems.",
-        metric: "6+ Institutions",
-        icon: GraduationCap,
+        title: "Trust is the Real Infrastructure",
+        description:
+          "Community trust networks scored 90% — the highest of any indicator. Social capital is Eldoret's invisible infrastructure, moving resources and information faster than any formal system.",
+        metric: "90% Trust",
+        icon: Shield,
       },
       {
-        title: "AgriTech Dominance",
-        description: "Over 40% of pitches focused on agricultural technology, reflecting Nakuru's position as a farming economy ripe for digital transformation.",
-        metric: "40% AgriTech",
-        icon: TrendingUp,
-      },
-      {
-        title: "Funding Gap",
-        description: "Most founders reported zero access to formal funding mechanisms. Angel networks and VC presence is virtually nonexistent outside Nairobi.",
-        metric: "0 Local VCs",
+        title: "The Capital Access Paradox",
+        description:
+          "Informal capital flows freely at 75%, yet formal capital sits at just 25%. Founders are resourceful but locked out of institutional finance — a critical bottleneck for scale.",
+        metric: "25% Formal",
         icon: BarChart3,
       },
       {
-        title: "Infrastructure Needs",
-        description: "Lack of co-working spaces, reliable internet, and innovation hubs remains the top barrier. Only 2 functional tech hubs identified in the county.",
-        metric: "2 Tech Hubs",
+        title: "Digital Adoption Gap",
+        description:
+          "Awareness of digital tools (75%) far outpaces actual adoption (50%). Cost, connectivity, and absence of localized support are the primary barriers keeping founders offline.",
+        metric: "50% Adoption",
+        icon: TrendingUp,
+      },
+      {
+        title: "Thin Support Infrastructure",
+        description:
+          "Startup support infrastructure scored just 30% — well below the national baseline. Incubators, accelerators, and co-working spaces are virtually absent outside a handful of university programs.",
+        metric: "30% Support",
         icon: Building2,
       },
     ],
@@ -113,47 +176,59 @@ const reportSections = [
     title: "Outcomes & Impact",
     icon: Award,
     outcomes: [
-      { label: "Startups Selected for Incubation", value: "8", description: "Top ventures chosen from 32 pitches for the Impact360 accelerator pipeline" },
-      { label: "MoUs Signed", value: "4", description: "Partnerships with Kabarak University, Egerton University, Nakuru County Government, and Rift Valley Tech Hub" },
-      { label: "Jobs Projected (12 months)", value: "60+", description: "Estimated direct employment from the 8 selected ventures within their first operational year" },
-      { label: "Community Members Engaged", value: "500+", description: "Total reach through events, social media, and partner networks during the campaign" },
+      {
+        label: "Founders Connected",
+        value: "45",
+        description: "Participants representing entrepreneurs, community organizers, investors, and ecosystem builders across Eldoret and the North Rift region",
+      },
+      {
+        label: "Economic Systems Documented",
+        value: "5",
+        description: "Trust, Builders, Access, Digital, and Visibility systems fully mapped and scored with community input",
+      },
+      {
+        label: "Ecosystem Indicators Scored",
+        value: "9",
+        description: "Live, room-generated dashboard scoring across nine indicators forming the National Decentralization Index baseline for Eldoret",
+      },
+      {
+        label: "Community Trust Score",
+        value: "90%",
+        description: "The strongest finding of the day — Eldoret's social capital is a hidden superpower waiting to be harnessed for formal innovation infrastructure",
+      },
     ],
   },
 ];
 
 const recommendations = [
   {
-    title: "Establish a Nakuru Innovation Satellite",
-    description: "Set up a permanent Impact360 presence in Nakuru through a partnership with an existing hub or university to provide ongoing mentorship and resources.",
+    title: "Formalize the Trust Networks",
+    description:
+      "Design programs that plug into existing community trust infrastructure — chamas, faith groups, trade associations — to deliver startup support, mentorship, and early-stage capital without requiring founders to leave their existing networks.",
     priority: "High",
-    icon: Building2,
+    icon: Shield,
   },
   {
-    title: "Launch AgriTech Vertical Program",
-    description: "Given the dominant interest in agricultural technology, develop a specialized AgriTech incubation track for Rift Valley founders.",
+    title: "Launch an Investor-Readiness Track",
+    description:
+      "The 25% formal capital score reveals a systemic gap. A dedicated investor-readiness cohort — covering financial modelling, due diligence preparation, and pitch practice — would unlock access to the national and diaspora investor base.",
     priority: "High",
     icon: Rocket,
   },
   {
-    title: "County Government Integration",
-    description: "Work with Nakuru County to integrate startup support into the County Integrated Development Plan (CIDP) and access devolution funds.",
+    title: "Close the Digital Adoption Gap",
+    description:
+      "Partner with tech companies to deliver subsidized, localized digital tools training tied to real revenue outcomes. Pairing adoption with income generation is the fastest path from awareness to sustained use.",
     priority: "Medium",
-    icon: Handshake,
+    icon: Zap,
   },
   {
-    title: "Quarterly Follow-Up Events",
-    description: "Schedule quarterly check-ins and mini-bootcamps to maintain momentum, track founder progress, and onboard new participants.",
+    title: "Fund Local Storytellers",
+    description:
+      "Eldoret's ecosystem is underdocumented. Supporting local journalists, content creators, and filmmakers to tell the city's innovation stories would multiply the reach of every other investment and attract outside attention.",
     priority: "Medium",
-    icon: Clock,
+    icon: Megaphone,
   },
-];
-
-const sectorBreakdown = [
-  { name: "AgriTech", percentage: 40, color: "#10B981" },
-  { name: "FinTech", percentage: 22, color: "#306CEC" },
-  { name: "EdTech", percentage: 18, color: "#F59E0B" },
-  { name: "HealthTech", percentage: 12, color: "#EF4444" },
-  { name: "Other", percentage: 8, color: "#64748B" },
 ];
 
 // ─── Animation Variants ─────────────────────────────────────────────────────
@@ -208,24 +283,21 @@ function MetricCard({ metric, index, darkMode }) {
   );
 }
 
-function TimelineItem({ item, index, darkMode }) {
+function TimelineItem({ item, index, darkMode, isLast }) {
   return (
     <motion.div
       variants={fadeRise}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="relative flex gap-4 md:gap-6"
     >
-      {/* Timeline line */}
       <div className="flex flex-col items-center">
         <div className="w-10 h-10 rounded-full bg-[#306CEC] flex items-center justify-center shrink-0 shadow-lg shadow-[#306CEC]/30">
           <CheckCircle className="w-5 h-5 text-white" />
         </div>
-        {index < 4 && (
+        {!isLast && (
           <div className={`w-0.5 flex-1 mt-2 ${darkMode ? "bg-gray-700" : "bg-gray-200"}`} />
         )}
       </div>
-
-      {/* Content */}
       <div className={`pb-8 flex-1 rounded-xl p-4 -mt-1 ${darkMode ? "bg-[#1a1f3a]/50" : "bg-gray-50"}`}>
         <div className="flex flex-wrap items-center gap-2 mb-2">
           <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#306CEC]/10 text-[#306CEC]">
@@ -246,26 +318,23 @@ function TimelineItem({ item, index, darkMode }) {
   );
 }
 
-function SectorBar({ sector, darkMode }) {
+function DashboardBar({ indicator, darkMode }) {
   return (
-    <motion.div
-      variants={fadeRise}
-      className="group"
-    >
+    <motion.div variants={fadeRise} className="group">
       <div className="flex justify-between items-center mb-2">
         <span className={`text-sm font-semibold ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-          {sector.name}
+          {indicator.name}
         </span>
-        <span className="text-sm font-bold" style={{ color: sector.color }}>
-          {sector.percentage}%
+        <span className="text-sm font-bold" style={{ color: indicator.color }}>
+          {indicator.percentage}%
         </span>
       </div>
       <div className={`w-full h-3 rounded-full overflow-hidden ${darkMode ? "bg-gray-700" : "bg-gray-200"}`}>
         <motion.div
           className="h-full rounded-full"
-          style={{ backgroundColor: sector.color }}
+          style={{ backgroundColor: indicator.color }}
           initial={{ width: 0 }}
-          whileInView={{ width: `${sector.percentage}%` }}
+          whileInView={{ width: `${indicator.percentage}%` }}
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
         />
@@ -277,7 +346,6 @@ function SectorBar({ sector, darkMode }) {
 function AccordionSection({ section, darkMode }) {
   const [open, setOpen] = useState(false);
   const Icon = section.icon;
-
   return (
     <motion.div
       variants={fadeRise}
@@ -338,7 +406,7 @@ function AccordionSection({ section, darkMode }) {
 
 // ─── Main Component ──────────────────────────────────────────────────────────
 
-export default function CampaignReport() {
+export default function EldoretReport() {
   const { darkMode } = useDarkMode();
   const [showQR, setShowQR] = useState(false);
 
@@ -351,35 +419,6 @@ export default function CampaignReport() {
     >
       <Navbar />
 
-      {/* Reports Nav */}
-      <div className={`pt-20 transition-colors duration-300 ${darkMode ? "bg-[#0a0f1e]" : "bg-white"}`}>
-        <div className="max-w-5xl mx-auto px-6 py-4 flex flex-wrap items-center gap-3">
-          <span className={`text-xs font-bold tracking-widest uppercase ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
-            Reports:
-          </span>
-          <span className="text-sm font-semibold px-4 py-1.5 rounded-full border bg-[#306CEC] border-[#306CEC] text-white">
-            Nakuru ✓
-          </span>
-          <a
-            href="/campaign/eldoret"
-            className={`text-sm font-semibold px-4 py-1.5 rounded-full border transition-all duration-200 ${
-              darkMode
-                ? "border-gray-700 text-gray-400 hover:border-[#306CEC]/50 hover:text-[#306CEC]"
-                : "border-gray-200 text-gray-500 hover:border-[#306CEC]/50 hover:text-[#306CEC]"
-            }`}
-          >
-            Eldoret
-          </a>
-          <span
-            className={`text-sm font-semibold px-4 py-1.5 rounded-full border opacity-40 cursor-not-allowed ${
-              darkMode ? "border-gray-700 text-gray-500" : "border-gray-200 text-gray-400"
-            }`}
-          >
-            Kisumu — coming soon
-          </span>
-        </div>
-      </div>
-
       {/* WhatsApp QR Code Modal */}
       {showQR && (
         <motion.div
@@ -389,7 +428,7 @@ export default function CampaignReport() {
           onClick={() => setShowQR(false)}
         >
           <motion.div
-            className={`rounded-3xl p-8 max-w-md w-full relative shadow-2xl ${darkMode ? 'bg-[#1a1f3a]' : 'bg-white'}`}
+            className={`rounded-3xl p-8 max-w-md w-full relative shadow-2xl ${darkMode ? "bg-[#1a1f3a]" : "bg-white"}`}
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.1 }}
@@ -397,21 +436,23 @@ export default function CampaignReport() {
           >
             <button
               onClick={() => setShowQR(false)}
-              className={`absolute top-4 right-4 text-2xl font-bold ${darkMode ? 'text-gray-400 hover:text-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`absolute top-4 right-4 text-2xl font-bold ${darkMode ? "text-gray-400 hover:text-gray-200" : "text-gray-500 hover:text-gray-700"}`}
             >
               ×
             </button>
             <div className="text-center space-y-6">
-              <h2 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Join Our Community</h2>
-              <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>Scan the QR code to join our WhatsApp community</p>
-              <div className={`p-8 rounded-2xl flex items-center justify-center ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <img onContextMenu={(e) => e.preventDefault()} draggable="false" 
-                  src="/frame.png" 
+              <h2 className={`text-3xl font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>Join Our Community</h2>
+              <p className={darkMode ? "text-gray-400" : "text-gray-600"}>Scan the QR code to join our WhatsApp community</p>
+              <div className={`p-8 rounded-2xl flex items-center justify-center ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}>
+                <img
+                  onContextMenu={(e) => e.preventDefault()}
+                  draggable="false"
+                  src="/frame.png"
                   alt="WhatsApp QR Code"
                   className="w-64 h-64 object-contain"
                 />
               </div>
-              <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>Or click below to join directly</p>
+              <p className={`text-sm ${darkMode ? "text-gray-500" : "text-gray-500"}`}>Or click below to join directly</p>
               <a
                 href="https://chat.whatsapp.com/I0g8kpCNvSn84yWQxybzHa"
                 target="_blank"
@@ -425,12 +466,40 @@ export default function CampaignReport() {
         </motion.div>
       )}
 
+      {/* ═══════════ REPORTS NAV ═══════════ */}
+      <div className={`pt-20 transition-colors duration-300 ${darkMode ? "bg-[#0a0f1e]" : "bg-white"}`}>
+        <div className="max-w-5xl mx-auto px-6 py-4 flex flex-wrap items-center gap-3">
+          <span className={`text-xs font-bold tracking-widest uppercase ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
+            Reports:
+          </span>
+          <a
+            href="/campaign"
+            className={`text-sm font-semibold px-4 py-1.5 rounded-full border transition-all duration-200 ${
+              darkMode
+                ? "border-gray-700 text-gray-400 hover:border-[#306CEC]/50 hover:text-[#306CEC]"
+                : "border-gray-200 text-gray-500 hover:border-[#306CEC]/50 hover:text-[#306CEC]"
+            }`}
+          >
+            Nakuru
+          </a>
+          <span
+            className="text-sm font-semibold px-4 py-1.5 rounded-full border bg-[#306CEC] border-[#306CEC] text-white"
+          >
+            Eldoret ✓
+          </span>
+          <span
+            className={`text-sm font-semibold px-4 py-1.5 rounded-full border opacity-40 cursor-not-allowed ${
+              darkMode ? "border-gray-700 text-gray-500" : "border-gray-200 text-gray-400"
+            }`}
+          >
+            Kisumu — coming soon
+          </span>
+        </div>
+      </div>
+
       {/* ═══════════ HERO ═══════════ */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628] via-[#162044] to-[#1a1f3a]" />
-
-        {/* Animated grid pattern */}
         <div className="absolute inset-0 opacity-10">
           <div
             className="absolute inset-0"
@@ -440,8 +509,6 @@ export default function CampaignReport() {
             }}
           />
         </div>
-
-        {/* Floating orbs */}
         <motion.div
           className="absolute top-20 right-20 w-72 h-72 rounded-full bg-[#306CEC]/20 blur-3xl"
           animate={{ scale: [1, 1.3, 1], x: [0, 30, 0], y: [0, -20, 0] }}
@@ -461,7 +528,7 @@ export default function CampaignReport() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#306CEC]/20 border border-[#306CEC]/30 mb-8"
           >
             <Activity className="w-4 h-4 text-[#306CEC]" />
-            <span className="text-sm font-semibold text-[#306CEC]">Campaign Report</span>
+            <span className="text-sm font-semibold text-[#306CEC]">State of Decentralization Report — Eldoret Edition</span>
           </motion.div>
 
           <motion.h1
@@ -483,23 +550,32 @@ export default function CampaignReport() {
             className="flex items-center justify-center gap-3 mb-8"
           >
             <MapPin className="w-5 h-5 text-[#306CEC]" />
-            <span className="text-xl md:text-2xl font-semibold text-gray-300">Nakuru County, Kenya</span>
+            <span className="text-xl md:text-2xl font-semibold text-gray-300">Eldoret, Uasin Gishu County, Kenya</span>
           </motion.div>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.5 }}
-            className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+            className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-4 leading-relaxed"
           >
-            A comprehensive report on Impact360's decentralization roadshow in Nakuru, mapping talent,
-            connecting ecosystems, and building the foundation for innovation beyond the capital.
+            A five-system ecosystem analysis of Eldoret's innovation economy — mapping trust networks,
+            capital flows, digital adoption, builder culture, and visibility infrastructure.
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.65 }}
+            className="text-sm text-gray-500 mb-10"
+          >
+            Prepared by Mariama Waiganjo &amp; Samuel Obukosia · Impact360 &amp; TOIG
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
+            transition={{ duration: 0.7, delay: 0.7 }}
             className="flex flex-wrap justify-center gap-4"
           >
             <a
@@ -525,10 +601,9 @@ export default function CampaignReport() {
           <motion.div variants={fadeRise} className="text-center mb-14">
             <span className="text-sm font-bold text-[#306CEC] tracking-widest uppercase">Impact At A Glance</span>
             <h2 className={`text-3xl md:text-5xl font-extrabold mt-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
-              Nakuru Campaign Numbers
+              Eldoret by the Numbers
             </h2>
           </motion.div>
-
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {impactMetrics.map((metric, i) => (
               <MetricCard key={metric.label} metric={metric} index={i} darkMode={darkMode} />
@@ -552,16 +627,84 @@ export default function CampaignReport() {
               Campaign Details
             </h2>
           </motion.div>
-
           {reportSections.slice(0, 2).map((section) => (
             <AccordionSection key={section.id} section={section} darkMode={darkMode} />
           ))}
         </div>
       </motion.section>
 
-      {/* ═══════════ TIMELINE ═══════════ */}
+      {/* ═══════════ FIVE SYSTEMS ═══════════ */}
       <motion.section
         className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-black" : "bg-[#F5F6F8]"}`}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={stagger}
+      >
+        <div className="max-w-5xl mx-auto">
+          <motion.div variants={fadeRise} className="text-center mb-14">
+            <span className="text-sm font-bold text-[#306CEC] tracking-widest uppercase">Framework</span>
+            <h2 className={`text-3xl md:text-4xl font-extrabold mt-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
+              Five Economic Systems
+            </h2>
+            <p className={`mt-3 text-base max-w-xl mx-auto ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+              Eldoret's ecosystem was mapped across five interconnected systems that together determine how innovation thrives — or stalls.
+            </p>
+          </motion.div>
+
+          <div className="space-y-6">
+            {systems.map((system, i) => (
+              <motion.div
+                key={system.number}
+                variants={fadeRise}
+                transition={{ delay: i * 0.08 }}
+                className={`rounded-2xl p-6 md:p-8 border transition-all duration-300 ${
+                  darkMode
+                    ? "bg-[#1a1f3a] border-gray-700/50"
+                    : "bg-white border-gray-100 shadow-md"
+                }`}
+              >
+                <div className="flex flex-wrap items-start gap-4 mb-4">
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 font-extrabold text-lg text-white"
+                    style={{ backgroundColor: system.color }}
+                  >
+                    {system.number}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-3 mb-1">
+                      <h3 className={`text-xl font-extrabold ${darkMode ? "text-white" : "text-gray-900"}`}>
+                        {system.name}
+                      </h3>
+                      <span
+                        className="text-xs font-bold px-3 py-1 rounded-full text-white"
+                        style={{ backgroundColor: system.color }}
+                      >
+                        {system.score}
+                      </span>
+                    </div>
+                    <p className={`text-sm leading-relaxed mb-4 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                      {system.description}
+                    </p>
+                    <div
+                      className={`border-l-4 pl-4 ${darkMode ? "border-gray-600" : "border-gray-200"}`}
+                      style={{ borderLeftColor: system.color }}
+                    >
+                      <p className={`text-sm font-semibold italic ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                        {system.insight}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* ═══════════ TIMELINE ═══════════ */}
+      <motion.section
+        className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-[#0a0f1e]" : "bg-white"}`}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.15 }}
@@ -571,13 +714,18 @@ export default function CampaignReport() {
           <motion.div variants={fadeRise} className="text-center mb-14">
             <span className="text-sm font-bold text-[#306CEC] tracking-widest uppercase">Activities</span>
             <h2 className={`text-3xl md:text-4xl font-extrabold mt-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
-              Campaign Timeline
+              Day of the Roadshow
             </h2>
           </motion.div>
-
           <div className="space-y-0">
             {reportSections[2].timeline.map((item, i) => (
-              <TimelineItem key={item.phase} item={item} index={i} darkMode={darkMode} />
+              <TimelineItem
+                key={item.phase}
+                item={item}
+                index={i}
+                darkMode={darkMode}
+                isLast={i === reportSections[2].timeline.length - 1}
+              />
             ))}
           </div>
         </div>
@@ -585,7 +733,7 @@ export default function CampaignReport() {
 
       {/* ═══════════ KEY FINDINGS ═══════════ */}
       <motion.section
-        className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-[#0a0f1e]" : "bg-white"}`}
+        className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-black" : "bg-[#F5F6F8]"}`}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.15 }}
@@ -598,7 +746,6 @@ export default function CampaignReport() {
               Key Findings
             </h2>
           </motion.div>
-
           <div className="grid md:grid-cols-2 gap-6">
             {reportSections[3].findings.map((finding, i) => {
               const FIcon = finding.icon;
@@ -639,9 +786,9 @@ export default function CampaignReport() {
         </div>
       </motion.section>
 
-      {/* ═══════════ SECTOR BREAKDOWN ═══════════ */}
+      {/* ═══════════ ECOSYSTEM DASHBOARD ═══════════ */}
       <motion.section
-        className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-black" : "bg-[#F5F6F8]"}`}
+        className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-[#0a0f1e]" : "bg-white"}`}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -651,16 +798,15 @@ export default function CampaignReport() {
           <motion.div variants={fadeRise} className="text-center mb-14">
             <div className="inline-flex items-center gap-2 mb-3">
               <PieChart className="w-5 h-5 text-[#306CEC]" />
-              <span className="text-sm font-bold text-[#306CEC] tracking-widest uppercase">Sectors</span>
+              <span className="text-sm font-bold text-[#306CEC] tracking-widest uppercase">Dashboard</span>
             </div>
             <h2 className={`text-3xl md:text-4xl font-extrabold ${darkMode ? "text-white" : "text-gray-900"}`}>
-              Pitch Sector Breakdown
+              Eldoret Ecosystem Dashboard
             </h2>
             <p className={`mt-3 text-base ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-              Distribution of startup pitches by industry vertical during the Nakuru roadshow
+              Live-generated scores from 45 participants — the National Decentralization Index baseline for Eldoret
             </p>
           </motion.div>
-
           <motion.div
             variants={fadeRise}
             className={`rounded-2xl p-8 border ${
@@ -668,8 +814,8 @@ export default function CampaignReport() {
             }`}
           >
             <div className="space-y-6">
-              {sectorBreakdown.map((sector) => (
-                <SectorBar key={sector.name} sector={sector} darkMode={darkMode} />
+              {ecosystemDashboard.map((indicator) => (
+                <DashboardBar key={indicator.name} indicator={indicator} darkMode={darkMode} />
               ))}
             </div>
           </motion.div>
@@ -678,7 +824,7 @@ export default function CampaignReport() {
 
       {/* ═══════════ OUTCOMES ═══════════ */}
       <motion.section
-        className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-[#0a0f1e]" : "bg-white"}`}
+        className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-black" : "bg-[#F5F6F8]"}`}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.15 }}
@@ -688,10 +834,9 @@ export default function CampaignReport() {
           <motion.div variants={fadeRise} className="text-center mb-14">
             <span className="text-sm font-bold text-[#306CEC] tracking-widest uppercase">Results</span>
             <h2 className={`text-3xl md:text-4xl font-extrabold mt-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
-              Campaign Outcomes
+              Outcomes &amp; Impact
             </h2>
           </motion.div>
-
           <div className="grid md:grid-cols-2 gap-6">
             {reportSections[4].outcomes.map((outcome, i) => (
               <motion.div
@@ -717,7 +862,7 @@ export default function CampaignReport() {
 
       {/* ═══════════ RECOMMENDATIONS ═══════════ */}
       <motion.section
-        className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-black" : "bg-[#F5F6F8]"}`}
+        className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-[#0a0f1e]" : "bg-white"}`}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.15 }}
@@ -730,7 +875,6 @@ export default function CampaignReport() {
               Recommendations
             </h2>
           </motion.div>
-
           <div className="grid md:grid-cols-2 gap-6">
             {recommendations.map((rec, i) => {
               const RIcon = rec.icon;
@@ -792,7 +936,6 @@ export default function CampaignReport() {
           animate={{ scale: [1, 1.2, 1] }}
           transition={{ duration: 6, repeat: Infinity }}
         />
-
         <div className="relative z-10 max-w-3xl mx-auto text-center">
           <motion.div
             variants={fadeRise}
@@ -801,7 +944,6 @@ export default function CampaignReport() {
             <Heart className="w-4 h-4 text-white" />
             <span className="text-sm font-semibold text-white/90">Be Part of the Movement</span>
           </motion.div>
-
           <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6">
             Decentralization Starts With You
           </h2>
@@ -809,7 +951,6 @@ export default function CampaignReport() {
             Whether you're a founder, mentor, investor, or community leader, join Impact360 in
             building thriving innovation ecosystems across every county in Kenya.
           </p>
-
           <div className="flex flex-wrap justify-center gap-4">
             <button
               onClick={() => setShowQR(true)}

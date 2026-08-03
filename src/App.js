@@ -12,6 +12,7 @@ import ScrollToTop from "./components/ScrollToTop.jsx";
 import AdminDashboard from "./components/admin.jsx";
 import TicketVerification from "./components/TicketVerification.jsx";
 import CampaignReport from "./components/CampaignReport.jsx";
+import EldoretReport from "./components/EldoretReport.jsx";
 import RoadshowPage from "./components/RoadshowPage.jsx";
 import LocalsPage from "./components/LocalsPage.jsx";
 import HighlightsPage from "./components/HighlightsPage.jsx";
@@ -33,6 +34,7 @@ export default function App() {
             <Route path="/events/highlights" element={<HighlightsPage />} />
             <Route path="/subscription" element={<Subscription />} />
             <Route path="/campaign" element={<CampaignReport />} />
+            <Route path="/campaign/eldoret" element={<EldoretReport />} />
             <Route path="*" element={<HomePage />} />
             <Route path="/navbar" element={<Navbar />} />
             <Route path="/footer" element={<Footer />} />
