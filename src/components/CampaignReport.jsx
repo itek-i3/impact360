@@ -1,832 +1,376 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  MapPin, Users, TrendingUp, Target, BarChart3,
-  CheckCircle, Clock, Globe, Lightbulb, Building2,
-  ArrowRight, ChevronDown, ChevronUp, Rocket,
-  GraduationCap, Handshake, Megaphone, Award,
-  PieChart, Activity, Zap, Heart
-} from "lucide-react";
-import { useDarkMode } from "../DarkModeContext";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { MapPin, ArrowRight, ArrowUpRight } from "lucide-react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
-const impactMetrics = [
-  { label: "Founders Reached", value: "150+", icon: Users, color: "#306CEC" },
-  { label: "Pitches Delivered", value: "32", icon: Megaphone, color: "#10B981" },
-  { label: "Mentorship Sessions", value: "48", icon: GraduationCap, color: "#F59E0B" },
-  { label: "Partnerships Formed", value: "12", icon: Handshake, color: "#306CEC" },
+const findings = [
+  {
+    number: "01",
+    name: "Untapped Talent Pool",
+    tag: "Education Gap",
+    tagColor: "#306CEC",
+    body: "Nakuru hosts 6+ universities and technical colleges producing graduates with strong technical skills but limited access to startup support systems. Talent exits the county for lack of local opportunity — not for lack of ambition.",
+    insight: "Capturing graduating talent locally requires visible, accessible pathways: incubation, fellowships, and founder communities.",
+    photo: "/Nakuru/Nakuru1.jpg",
+    metric: "6+",
+    metricLabel: "Institutions",
+  },
+  {
+    number: "02",
+    name: "AgriTech Dominance",
+    tag: "Opportunity",
+    tagColor: "#10B981",
+    body: "Over 40% of pitches focused on agricultural technology, reflecting Nakuru's position as a farming economy ripe for digital transformation. Founders see the gap — what they need is structured support to close it.",
+    insight: "A dedicated AgriTech vertical program for Rift Valley founders would capture this momentum before it disperses.",
+    photo: "/Nakuru/Nakuru2.jpg",
+    metric: "40%",
+    metricLabel: "AgriTech Pitches",
+  },
+  {
+    number: "03",
+    name: "Capital Access Gap",
+    tag: "Critical Gap",
+    tagColor: "#EF4444",
+    body: "Most founders reported zero access to formal funding mechanisms. Angel networks and VC presence is virtually nonexistent outside Nairobi. Founders are building on empty tanks — resourceful but under-resourced.",
+    insight: "Even basic investor-readiness training and warm introductions to national networks would be transformative here.",
+    photo: "/Nakuru/Nakuru3.jpg",
+    metric: "0",
+    metricLabel: "Local VCs",
+  },
+  {
+    number: "04",
+    name: "Infrastructure Needs",
+    tag: "Bottleneck",
+    tagColor: "#F59E0B",
+    body: "Lack of co-working spaces, reliable internet, and innovation hubs remains the top barrier. Only 2 functional tech hubs were identified in the county. Physical infrastructure is the floor — without it, nothing else stacks.",
+    insight: "Partnership with county government to integrate hub infrastructure into CIDP planning would unlock devolution funds.",
+    photo: "/Nakuru/Nakuru4.jpg",
+    metric: "2",
+    metricLabel: "Tech Hubs",
+  },
 ];
 
-const reportSections = [
-  {
-    id: "overview",
-    title: "Campaign Overview",
-    icon: Globe,
-    content: `The Impact360 Decentralization Roadshow landed in Nakuru as part of our mission to bring innovation infrastructure, entrepreneurial support, and tech ecosystem services beyond Nairobi. Nakuru, Kenya's fourth-largest city and a rapidly growing economic hub in the Rift Valley, was chosen for its vibrant youth population, emerging startup scene, and untapped potential for innovation-led growth.`,
-    highlight: "Nakuru: Rift Valley's Innovation Frontier",
-  },
-  {
-    id: "objectives",
-    title: "Campaign Objectives",
-    icon: Target,
-    items: [
-      "Map and connect the local entrepreneurial ecosystem in Nakuru County",
-      "Identify high-potential founders and startups for incubation & acceleration",
-      "Deliver practical workshops on business validation, pitching, and fundraising",
-      "Establish partnerships with local universities, hubs, and county government",
-      "Create a replicable decentralization playbook for future county roadshows",
-    ],
-  },
-  {
-    id: "activities",
-    title: "Key Activities & Timeline",
-    icon: Clock,
-    timeline: [
-      {
-        phase: "Pre-Event Outreach",
-        date: "Week 1-2",
-        description: "Community mobilization through university partnerships, social media campaigns, and local hub collaborations. Over 500 applications received.",
-        status: "completed",
-      },
-      {
-        phase: "Founder Discovery Day",
-        date: "Day 1",
-        description: "Open pitch sessions where 32 founders presented their ideas to a panel of mentors and investors. Focus areas: AgriTech, FinTech, EdTech, and HealthTech.",
-        status: "completed",
-      },
-      {
-        phase: "Masterclass & Workshops",
-        date: "Day 2",
-        description: "Hands-on workshops covering lean startup methodology, financial modelling, product-market fit, and go-to-market strategies.",
-        status: "completed",
-      },
-      {
-        phase: "Ecosystem Roundtable",
-        date: "Day 3",
-        description: "Stakeholder forum with Nakuru County officials, university deans, local business leaders, and ecosystem builders to align on long-term support frameworks.",
-        status: "completed",
-      },
-      {
-        phase: "Follow-Up & Incubation Selection",
-        date: "Week 3-4",
-        description: "Evaluation of top founders for Impact360 incubation cohort. 8 startups selected for the accelerator pipeline.",
-        status: "completed",
-      },
-    ],
-  },
-  {
-    id: "findings",
-    title: "Key Findings",
-    icon: Lightbulb,
-    findings: [
-      {
-        title: "Untapped Talent Pool",
-        description: "Nakuru hosts 6+ universities and technical colleges producing graduates with strong technical skills but limited access to startup support systems.",
-        metric: "6+ Institutions",
-        icon: GraduationCap,
-      },
-      {
-        title: "AgriTech Dominance",
-        description: "Over 40% of pitches focused on agricultural technology, reflecting Nakuru's position as a farming economy ripe for digital transformation.",
-        metric: "40% AgriTech",
-        icon: TrendingUp,
-      },
-      {
-        title: "Funding Gap",
-        description: "Most founders reported zero access to formal funding mechanisms. Angel networks and VC presence is virtually nonexistent outside Nairobi.",
-        metric: "0 Local VCs",
-        icon: BarChart3,
-      },
-      {
-        title: "Infrastructure Needs",
-        description: "Lack of co-working spaces, reliable internet, and innovation hubs remains the top barrier. Only 2 functional tech hubs identified in the county.",
-        metric: "2 Tech Hubs",
-        icon: Building2,
-      },
-    ],
-  },
-  {
-    id: "outcomes",
-    title: "Outcomes & Impact",
-    icon: Award,
-    outcomes: [
-      { label: "Startups Selected for Incubation", value: "8", description: "Top ventures chosen from 32 pitches for the Impact360 accelerator pipeline" },
-      { label: "MoUs Signed", value: "4", description: "Partnerships with Kabarak University, Egerton University, Nakuru County Government, and Rift Valley Tech Hub" },
-      { label: "Jobs Projected (12 months)", value: "60+", description: "Estimated direct employment from the 8 selected ventures within their first operational year" },
-      { label: "Community Members Engaged", value: "500+", description: "Total reach through events, social media, and partner networks during the campaign" },
-    ],
-  },
+const sectorData = [
+  { label: "AgriTech", value: "40%", color: "#10B981" },
+  { label: "FinTech", value: "22%", color: "#306CEC" },
+  { label: "EdTech", value: "18%", color: "#F59E0B" },
+  { label: "HealthTech", value: "12%", color: "#EF4444" },
+  { label: "Other", value: "8%", color: "#64748B" },
 ];
 
 const recommendations = [
   {
+    n: "01",
     title: "Establish a Nakuru Innovation Satellite",
-    description: "Set up a permanent Impact360 presence in Nakuru through a partnership with an existing hub or university to provide ongoing mentorship and resources.",
+    body: "Set up a permanent Impact360 presence in Nakuru through a partnership with an existing hub or university to provide ongoing mentorship and resources.",
     priority: "High",
-    icon: Building2,
   },
   {
+    n: "02",
     title: "Launch AgriTech Vertical Program",
-    description: "Given the dominant interest in agricultural technology, develop a specialized AgriTech incubation track for Rift Valley founders.",
+    body: "Given the dominant interest in agricultural technology, develop a specialized AgriTech incubation track for Rift Valley founders.",
     priority: "High",
-    icon: Rocket,
   },
   {
+    n: "03",
     title: "County Government Integration",
-    description: "Work with Nakuru County to integrate startup support into the County Integrated Development Plan (CIDP) and access devolution funds.",
+    body: "Work with Nakuru County to integrate startup support into the County Integrated Development Plan (CIDP) and access devolution funds.",
     priority: "Medium",
-    icon: Handshake,
   },
   {
+    n: "04",
     title: "Quarterly Follow-Up Events",
-    description: "Schedule quarterly check-ins and mini-bootcamps to maintain momentum, track founder progress, and onboard new participants.",
+    body: "Schedule quarterly check-ins and mini-bootcamps to maintain momentum, track founder progress, and onboard new participants.",
     priority: "Medium",
-    icon: Clock,
   },
 ];
 
-const sectorBreakdown = [
-  { name: "AgriTech", percentage: 40, color: "#10B981" },
-  { name: "FinTech", percentage: 22, color: "#306CEC" },
-  { name: "EdTech", percentage: 18, color: "#F59E0B" },
-  { name: "HealthTech", percentage: 12, color: "#EF4444" },
-  { name: "Other", percentage: 8, color: "#64748B" },
-];
+// ─── Animation ───────────────────────────────────────────────────────────────
 
-// ─── Animation Variants ─────────────────────────────────────────────────────
-
-const fadeRise = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0 },
+const fadeUp = {
+  hidden: { opacity: 0, y: 32 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
 };
 
 const stagger = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.12 } },
+  visible: { transition: { staggerChildren: 0.1 } },
 };
 
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.85 },
-  visible: { opacity: 1, scale: 1 },
+// ─── Colors (always dark) ────────────────────────────────────────────────────
+const C = {
+  bg: "#000000",
+  bgAlt: "#0a0a0a",
+  bgDash: "#0c0c0c",
+  text: "#f1f5f9",
+  muted: "#64748b",
+  border: "rgba(255,255,255,0.08)",
 };
 
-// ─── Sub-Components ──────────────────────────────────────────────────────────
-
-function MetricCard({ metric, index, darkMode }) {
-  const Icon = metric.icon;
-  return (
-    <motion.div
-      variants={scaleIn}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      whileHover={{ y: -8, scale: 1.03 }}
-      className={`relative overflow-hidden rounded-2xl p-6 text-center group cursor-default ${
-        darkMode
-          ? "bg-[#1a1f3a] border border-gray-700/50"
-          : "bg-white border border-gray-100 shadow-lg shadow-gray-200/50"
-      }`}
-    >
-      <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500"
-        style={{ backgroundColor: metric.color }}
-      />
-      <div
-        className="w-14 h-14 mx-auto mb-4 rounded-xl flex items-center justify-center"
-        style={{ backgroundColor: `${metric.color}15` }}
-      >
-        <Icon className="w-7 h-7" style={{ color: metric.color }} />
-      </div>
-      <p className="text-3xl md:text-4xl font-bold mb-1" style={{ color: metric.color }}>
-        {metric.value}
-      </p>
-      <p className={`text-sm font-medium ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-        {metric.label}
-      </p>
-    </motion.div>
-  );
-}
-
-function TimelineItem({ item, index, darkMode }) {
-  return (
-    <motion.div
-      variants={fadeRise}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="relative flex gap-4 md:gap-6"
-    >
-      {/* Timeline line */}
-      <div className="flex flex-col items-center">
-        <div className="w-10 h-10 rounded-full bg-[#306CEC] flex items-center justify-center shrink-0 shadow-lg shadow-[#306CEC]/30">
-          <CheckCircle className="w-5 h-5 text-white" />
-        </div>
-        {index < 4 && (
-          <div className={`w-0.5 flex-1 mt-2 ${darkMode ? "bg-gray-700" : "bg-gray-200"}`} />
-        )}
-      </div>
-
-      {/* Content */}
-      <div className={`pb-8 flex-1 rounded-xl p-4 -mt-1 ${darkMode ? "bg-[#1a1f3a]/50" : "bg-gray-50"}`}>
-        <div className="flex flex-wrap items-center gap-2 mb-2">
-          <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#306CEC]/10 text-[#306CEC]">
-            {item.date}
-          </span>
-          <span className="text-xs font-bold px-3 py-1 rounded-full bg-green-500/10 text-green-500">
-            Completed
-          </span>
-        </div>
-        <h4 className={`text-lg font-bold mb-1 ${darkMode ? "text-white" : "text-gray-900"}`}>
-          {item.phase}
-        </h4>
-        <p className={`text-sm leading-relaxed ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
-          {item.description}
-        </p>
-      </div>
-    </motion.div>
-  );
-}
-
-function SectorBar({ sector, darkMode }) {
-  return (
-    <motion.div
-      variants={fadeRise}
-      className="group"
-    >
-      <div className="flex justify-between items-center mb-2">
-        <span className={`text-sm font-semibold ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-          {sector.name}
-        </span>
-        <span className="text-sm font-bold" style={{ color: sector.color }}>
-          {sector.percentage}%
-        </span>
-      </div>
-      <div className={`w-full h-3 rounded-full overflow-hidden ${darkMode ? "bg-gray-700" : "bg-gray-200"}`}>
-        <motion.div
-          className="h-full rounded-full"
-          style={{ backgroundColor: sector.color }}
-          initial={{ width: 0 }}
-          whileInView={{ width: `${sector.percentage}%` }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-        />
-      </div>
-    </motion.div>
-  );
-}
-
-function AccordionSection({ section, darkMode }) {
-  const [open, setOpen] = useState(false);
-  const Icon = section.icon;
-
-  return (
-    <motion.div
-      variants={fadeRise}
-      className={`rounded-2xl overflow-hidden border transition-all duration-300 ${
-        darkMode
-          ? "bg-[#1a1f3a] border-gray-700/50 hover:border-[#306CEC]/50"
-          : "bg-white border-gray-100 shadow-md hover:shadow-lg"
-      }`}
-    >
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-5 md:p-6 text-left"
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#306CEC]/10 flex items-center justify-center">
-            <Icon className="w-5 h-5 text-[#306CEC]" />
-          </div>
-          <h3 className={`text-lg font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>
-            {section.title}
-          </h3>
-        </div>
-        {open ? (
-          <ChevronUp className={`w-5 h-5 ${darkMode ? "text-gray-400" : "text-gray-500"}`} />
-        ) : (
-          <ChevronDown className={`w-5 h-5 ${darkMode ? "text-gray-400" : "text-gray-500"}`} />
-        )}
-      </button>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="overflow-hidden"
-          >
-            <div className={`px-5 md:px-6 pb-6 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
-              {section.content && (
-                <p className="text-base leading-relaxed">{section.content}</p>
-              )}
-              {section.items && (
-                <ul className="space-y-3">
-                  {section.items.map((item, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-[#306CEC] mt-0.5 shrink-0" />
-                      <span className="text-base">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
-
-// ─── Main Component ──────────────────────────────────────────────────────────
+// ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function CampaignReport() {
-  const { darkMode } = useDarkMode();
-  const [showQR, setShowQR] = useState(false);
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   return (
-    <div
-      className={`font-sans transition-colors duration-1000 min-h-screen ${
-        darkMode ? "bg-black" : "bg-[#F5F6F8]"
-      }`}
-      style={{ fontFamily: "'DM Sans', sans-serif" }}
-    >
+    <div style={{ fontFamily: "'DM Sans', sans-serif", background: C.bg, color: C.text, minHeight: "100vh" }}>
       <Navbar />
 
-      {/* Reports Nav */}
-      <div className={`pt-20 transition-colors duration-300 ${darkMode ? "bg-[#0a0f1e]" : "bg-white"}`}>
-        <div className="max-w-5xl mx-auto px-6 py-4 flex flex-wrap items-center gap-3">
-          <span className={`text-xs font-bold tracking-widest uppercase ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
-            Reports:
-          </span>
-          <span className="text-sm font-semibold px-4 py-1.5 rounded-full border bg-[#306CEC] border-[#306CEC] text-white">
-            Nakuru ✓
-          </span>
-          <a
-            href="/campaign/eldoret"
-            className={`text-sm font-semibold px-4 py-1.5 rounded-full border transition-all duration-200 ${
-              darkMode
-                ? "border-gray-700 text-gray-400 hover:border-[#306CEC]/50 hover:text-[#306CEC]"
-                : "border-gray-200 text-gray-500 hover:border-[#306CEC]/50 hover:text-[#306CEC]"
-            }`}
-          >
+      {/* ── Reports nav ─────────────────────────────────────────────────── */}
+      <div style={{ background: C.bg, borderBottom: `1px solid ${C.border}`, paddingTop: "80px" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto", padding: "12px 24px", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: C.muted }}>Reports</span>
+          <span style={{ color: C.muted, margin: "0 4px" }}>·</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: "#fff", background: "#306CEC", padding: "4px 14px", borderRadius: 100 }}>Nakuru</span>
+          <a href="/campaign/eldoret" style={{ fontSize: 13, fontWeight: 600, color: C.muted, textDecoration: "none", padding: "4px 14px", borderRadius: 100, border: `1px solid ${C.border}`, transition: "all 0.2s" }}
+            onMouseEnter={e => { e.target.style.color = "#306CEC"; e.target.style.borderColor = "#306CEC"; }}
+            onMouseLeave={e => { e.target.style.color = C.muted; e.target.style.borderColor = C.border; }}>
             Eldoret
           </a>
-          <span
-            className={`text-sm font-semibold px-4 py-1.5 rounded-full border opacity-40 cursor-not-allowed ${
-              darkMode ? "border-gray-700 text-gray-500" : "border-gray-200 text-gray-400"
-            }`}
-          >
-            Kisumu — coming soon
-          </span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: C.muted, padding: "4px 14px", borderRadius: 100, border: `1px solid ${C.border}`, opacity: 0.4, cursor: "not-allowed" }}>Kisumu — soon</span>
         </div>
       </div>
 
-      {/* WhatsApp QR Code Modal */}
-      {showQR && (
-        <motion.div
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          onClick={() => setShowQR(false)}
-        >
-          <motion.div
-            className={`rounded-3xl p-8 max-w-md w-full relative shadow-2xl ${darkMode ? 'bg-[#1a1f3a]' : 'bg-white'}`}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.1 }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setShowQR(false)}
-              className={`absolute top-4 right-4 text-2xl font-bold ${darkMode ? 'text-gray-400 hover:text-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
-            >
-              ×
-            </button>
-            <div className="text-center space-y-6">
-              <h2 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Join Our Community</h2>
-              <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>Scan the QR code to join our WhatsApp community</p>
-              <div className={`p-8 rounded-2xl flex items-center justify-center ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                <img onContextMenu={(e) => e.preventDefault()} draggable="false" 
-                  src="/frame.png" 
-                  alt="WhatsApp QR Code"
-                  className="w-64 h-64 object-contain"
-                />
-              </div>
-              <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>Or click below to join directly</p>
-              <a
-                href="https://chat.whatsapp.com/I0g8kpCNvSn84yWQxybzHa"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block bg-green-500 text-white px-8 py-3 rounded-full font-bold hover:bg-green-600 transition-all duration-300"
-              >
-                Open WhatsApp
-              </a>
-            </div>
-          </motion.div>
+      {/* ── Hero ────────────────────────────────────────────────────────── */}
+      <section ref={heroRef} style={{ position: "relative", height: "100vh", minHeight: 600, display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
+        <motion.div style={{ position: "absolute", inset: 0, y: heroY }}>
+          <img src="/Nakuru/mainNakuru.jpg" alt="Nakuru roadshow"
+            style={{ width: "100%", height: "110%", objectFit: "cover", objectPosition: "center top" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, #000 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.2) 100%)" }} />
         </motion.div>
-      )}
 
-      {/* ═══════════ HERO ═══════════ */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628] via-[#162044] to-[#1a1f3a]" />
-
-        {/* Animated grid pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `linear-gradient(rgba(48,108,236,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(48,108,236,0.3) 1px, transparent 1px)`,
-              backgroundSize: "60px 60px",
-            }}
-          />
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, fontSize: "clamp(80px,18vw,220px)", fontWeight: 900, color: "rgba(255,255,255,0.04)", lineHeight: 0.85, letterSpacing: "-0.04em", userSelect: "none", pointerEvents: "none", paddingLeft: "2vw", overflow: "hidden" }}>
+          NAKURU
         </div>
 
-        {/* Floating orbs */}
-        <motion.div
-          className="absolute top-20 right-20 w-72 h-72 rounded-full bg-[#306CEC]/20 blur-3xl"
-          animate={{ scale: [1, 1.3, 1], x: [0, 30, 0], y: [0, -20, 0] }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
-        <motion.div
-          className="absolute bottom-20 left-20 w-96 h-96 rounded-full bg-[#306CEC]/15 blur-3xl"
-          animate={{ scale: [1.2, 1, 1.2], x: [0, -20, 0] }}
-          transition={{ duration: 10, repeat: Infinity }}
-        />
-
-        <div className="relative z-10 max-w-4xl mx-auto text-center px-6 py-32">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#306CEC]/20 border border-[#306CEC]/30 mb-8"
-          >
-            <Activity className="w-4 h-4 text-[#306CEC]" />
-            <span className="text-sm font-semibold text-[#306CEC]">Campaign Report</span>
+        <motion.div style={{ position: "relative", zIndex: 2, maxWidth: 960, margin: "0 auto", padding: "0 24px 72px", width: "100%", opacity: heroOpacity }}>
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
+            style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 24, background: "rgba(48,108,236,0.15)", border: "1px solid rgba(48,108,236,0.35)", borderRadius: 100, padding: "6px 16px" }}>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#306CEC" }}>State of Decentralization Report</span>
           </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight"
-          >
-            State of{" "}
-            <span className="bg-gradient-to-r from-[#306CEC] via-[#5b8af5] to-[#4a7eec] bg-clip-text text-transparent">
-              Decentralization
-            </span>
+          <motion.h1 initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            style={{ fontSize: "clamp(2.8rem,6vw,5.5rem)", fontWeight: 900, color: "#fff", lineHeight: 1.05, letterSpacing: "-0.03em", margin: "0 0 20px", maxWidth: 720 }}>
+            Rift Valley's innovation frontier.
           </motion.h1>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
-            className="flex items-center justify-center gap-3 mb-8"
-          >
-            <MapPin className="w-5 h-5 text-[#306CEC]" />
-            <span className="text-xl md:text-2xl font-semibold text-gray-300">Nakuru County, Kenya</span>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
+            style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, color: "rgba(255,255,255,0.7)" }}>
+              <MapPin size={14} />
+              <span style={{ fontSize: 14, fontWeight: 500 }}>Nakuru County, Kenya</span>
+            </div>
+            <span style={{ color: "rgba(255,255,255,0.3)" }}>·</span>
+            <span style={{ fontSize: 13, color: "rgba(255,255,255,0.45)" }}>Impact360 Campaign Report</span>
           </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
-            className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed"
-          >
-            A comprehensive report on Impact360's decentralization roadshow in Nakuru, mapping talent,
-            connecting ecosystems, and building the foundation for innovation beyond the capital.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
-            className="flex flex-wrap justify-center gap-4"
-          >
-            <a
-              href="#report"
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#306CEC] text-white font-bold rounded-full hover:bg-[#2558c9] transition-all duration-300 shadow-lg shadow-[#306CEC]/30 hover:shadow-[#306CEC]/50"
-            >
-              Read Full Report <ArrowRight className="w-4 h-4" />
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.45 }} style={{ marginTop: 32 }}>
+            <a href="#report" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#306CEC", color: "#fff", fontWeight: 700, fontSize: 14, padding: "12px 28px", borderRadius: 100, textDecoration: "none", boxShadow: "0 8px 32px rgba(48,108,236,0.4)" }}>
+              Read the report <ArrowRight size={16} />
             </a>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ── Stats strip ──────────────────────────────────────────────────── */}
+      <section style={{ background: "#000", borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}` }}>
+        <div style={{ maxWidth: 960, margin: "0 auto", padding: "48px 24px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))" }}>
+          {[{ v: "50", l: "Attendees" }, { v: "32", l: "Pitches" }, { v: "8", l: "Startups Selected" }, { v: "4", l: "MoUs Signed" }].map((s, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+              style={{ textAlign: "center", padding: "16px 12px", borderRight: i < 3 ? `1px solid ${C.border}` : "none" }}>
+              <p style={{ fontSize: "clamp(2rem,4vw,3rem)", fontWeight: 900, color: "#306CEC", lineHeight: 1, margin: 0 }}>{s.v}</p>
+              <p style={{ fontSize: 12, fontWeight: 600, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase", marginTop: 6 }}>{s.l}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Intro ────────────────────────────────────────────────────────── */}
+      <section id="report" style={{ background: C.bg, padding: "100px 24px" }}>
+        <div style={{ maxWidth: 680, margin: "0 auto" }}>
+          <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
+            style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#306CEC", marginBottom: 24 }}>Overview</motion.p>
+          <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
+            style={{ fontSize: "clamp(1.2rem,2.5vw,1.6rem)", fontWeight: 400, lineHeight: 1.7, color: C.text, margin: 0 }}>
+            The Impact360 Decentralization Roadshow landed in Nakuru as part of our mission to bring innovation infrastructure, entrepreneurial support, and tech ecosystem services beyond Nairobi. Nakuru — Kenya's fourth-largest city and a rapidly growing economic hub in the Rift Valley — was chosen for its vibrant youth population, emerging startup scene, and untapped potential for innovation-led growth.
+          </motion.p>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
+            style={{ marginTop: 40, paddingLeft: 24, borderLeft: "3px solid #306CEC" }}>
+            <p style={{ fontSize: "clamp(1.1rem,2vw,1.35rem)", fontWeight: 600, fontStyle: "italic", lineHeight: 1.6, color: C.text, margin: 0 }}>
+              "Nakuru has always been a city on the move. We just gave it a runway."
+            </p>
           </motion.div>
         </div>
       </section>
 
-      {/* ═══════════ IMPACT METRICS ═══════════ */}
-      <motion.section
-        id="report"
-        className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-black" : "bg-[#F5F6F8]"}`}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={stagger}
-      >
-        <div className="max-w-6xl mx-auto">
-          <motion.div variants={fadeRise} className="text-center mb-14">
-            <span className="text-sm font-bold text-[#306CEC] tracking-widest uppercase">Impact At A Glance</span>
-            <h2 className={`text-3xl md:text-5xl font-extrabold mt-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
-              Nakuru Campaign Numbers
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {impactMetrics.map((metric, i) => (
-              <MetricCard key={metric.label} metric={metric} index={i} darkMode={darkMode} />
-            ))}
+      {/* ── Photo break ──────────────────────────────────────────────────── */}
+      <div style={{ height: "50vh", minHeight: 300, overflow: "hidden", position: "relative" }}>
+        <img src="/Nakuru/Nakuru5.jpg" alt="Nakuru roadshow"
+          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(0,0,0,0.5) 0%, transparent 60%)" }} />
+        <div style={{ position: "absolute", bottom: 32, left: 0, right: 0 }}>
+          <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px" }}>
+            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 500 }}>Impact360 Roadshow · Nakuru, Kenya</span>
           </div>
         </div>
-      </motion.section>
+      </div>
 
-      {/* ═══════════ REPORT OVERVIEW & OBJECTIVES (Accordion) ═══════════ */}
-      <motion.section
-        className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-[#0a0f1e]" : "bg-white"}`}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
-        variants={stagger}
-      >
-        <div className="max-w-4xl mx-auto space-y-4">
-          <motion.div variants={fadeRise} className="text-center mb-10">
-            <span className="text-sm font-bold text-[#306CEC] tracking-widest uppercase">Deep Dive</span>
-            <h2 className={`text-3xl md:text-4xl font-extrabold mt-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
-              Campaign Details
-            </h2>
+      {/* ── Findings header ──────────────────────────────────────────────── */}
+      <section style={{ background: C.bg, padding: "80px 24px 40px" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#306CEC", marginBottom: 12 }}>Insights</p>
+            <h2 style={{ fontSize: "clamp(2rem,4vw,3.5rem)", fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.1, color: C.text, margin: "0 0 16px" }}>Key Findings</h2>
+            <p style={{ fontSize: 15, color: C.muted, maxWidth: 520, lineHeight: 1.6, margin: 0 }}>Four critical patterns emerged from the Nakuru roadshow — each pointing to the same underlying truth about what's holding the ecosystem back.</p>
           </motion.div>
-
-          {reportSections.slice(0, 2).map((section) => (
-            <AccordionSection key={section.id} section={section} darkMode={darkMode} />
-          ))}
         </div>
-      </motion.section>
+      </section>
 
-      {/* ═══════════ TIMELINE ═══════════ */}
-      <motion.section
-        className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-black" : "bg-[#F5F6F8]"}`}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
-        variants={stagger}
-      >
-        <div className="max-w-3xl mx-auto">
-          <motion.div variants={fadeRise} className="text-center mb-14">
-            <span className="text-sm font-bold text-[#306CEC] tracking-widest uppercase">Activities</span>
-            <h2 className={`text-3xl md:text-4xl font-extrabold mt-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
-              Campaign Timeline
-            </h2>
-          </motion.div>
+      {/* ── Finding chapters ─────────────────────────────────────────────── */}
+      {findings.map((f, i) => (
+        <motion.section key={f.number}
+          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.15 }} variants={stagger}
+          style={{ background: C.bg, padding: "80px 24px", borderTop: `1px solid ${C.border}` }}>
+          <div style={{ maxWidth: 960, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "center" }}
+            className="sys-grid">
+            {/* text */}
+            <div style={{ order: i % 2 === 0 ? 0 : 1 }} className="sys-text">
+              <motion.div variants={fadeUp} style={{ display: "flex", alignItems: "flex-start", gap: 16, marginBottom: 24 }}>
+                <span style={{ fontSize: "clamp(5rem,9vw,8rem)", fontWeight: 900, lineHeight: 0.9, color: f.tagColor, opacity: 0.12, letterSpacing: "-0.04em", userSelect: "none", flexShrink: 0 }}>{f.number}</span>
+                <div style={{ paddingTop: 12 }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: f.tagColor, background: `${f.tagColor}18`, padding: "3px 10px", borderRadius: 100, display: "inline-block", marginBottom: 8 }}>{f.tag}</span>
+                  <h3 style={{ fontSize: "clamp(1.4rem,2.5vw,2rem)", fontWeight: 800, letterSpacing: "-0.02em", color: C.text, margin: 0 }}>{f.name}</h3>
+                </div>
+              </motion.div>
 
-          <div className="space-y-0">
-            {reportSections[2].timeline.map((item, i) => (
-              <TimelineItem key={item.phase} item={item} index={i} darkMode={darkMode} />
-            ))}
-          </div>
-        </div>
-      </motion.section>
+              <motion.div variants={fadeUp} style={{ marginBottom: 24 }}>
+                <p style={{ fontSize: "clamp(2.5rem,5vw,4rem)", fontWeight: 900, color: f.tagColor, lineHeight: 1, margin: 0 }}>{f.metric}</p>
+                <p style={{ fontSize: 11, fontWeight: 600, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", marginTop: 4 }}>{f.metricLabel}</p>
+              </motion.div>
 
-      {/* ═══════════ KEY FINDINGS ═══════════ */}
-      <motion.section
-        className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-[#0a0f1e]" : "bg-white"}`}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
-        variants={stagger}
-      >
-        <div className="max-w-6xl mx-auto">
-          <motion.div variants={fadeRise} className="text-center mb-14">
-            <span className="text-sm font-bold text-[#306CEC] tracking-widest uppercase">Insights</span>
-            <h2 className={`text-3xl md:text-4xl font-extrabold mt-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
-              Key Findings
-            </h2>
-          </motion.div>
+              <motion.p variants={fadeUp} style={{ fontSize: 15, lineHeight: 1.8, color: "#94a3b8", margin: "0 0 24px" }}>{f.body}</motion.p>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {reportSections[3].findings.map((finding, i) => {
-              const FIcon = finding.icon;
-              return (
-                <motion.div
-                  key={finding.title}
-                  variants={fadeRise}
-                  transition={{ delay: i * 0.1 }}
-                  whileHover={{ y: -4 }}
-                  className={`rounded-2xl p-6 border transition-all duration-300 ${
-                    darkMode
-                      ? "bg-[#1a1f3a] border-gray-700/50 hover:border-[#306CEC]/40"
-                      : "bg-[#F5F6F8] border-gray-100 hover:shadow-lg"
-                  }`}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#306CEC]/10 flex items-center justify-center shrink-0">
-                      <FIcon className="w-6 h-6 text-[#306CEC]" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className={`text-lg font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>
-                          {finding.title}
-                        </h4>
-                        <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#306CEC]/10 text-[#306CEC]">
-                          {finding.metric}
-                        </span>
-                      </div>
-                      <p className={`text-sm leading-relaxed ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
-                        {finding.description}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </motion.section>
-
-      {/* ═══════════ SECTOR BREAKDOWN ═══════════ */}
-      <motion.section
-        className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-black" : "bg-[#F5F6F8]"}`}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={stagger}
-      >
-        <div className="max-w-4xl mx-auto">
-          <motion.div variants={fadeRise} className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 mb-3">
-              <PieChart className="w-5 h-5 text-[#306CEC]" />
-              <span className="text-sm font-bold text-[#306CEC] tracking-widest uppercase">Sectors</span>
+              <motion.div variants={fadeUp} style={{ background: `${f.tagColor}0f`, borderLeft: `3px solid ${f.tagColor}`, padding: "14px 18px", borderRadius: "0 8px 8px 0" }}>
+                <p style={{ fontSize: 13, fontWeight: 600, color: "#cbd5e1", lineHeight: 1.6, margin: 0 }}>{f.insight}</p>
+              </motion.div>
             </div>
-            <h2 className={`text-3xl md:text-4xl font-extrabold ${darkMode ? "text-white" : "text-gray-900"}`}>
-              Pitch Sector Breakdown
-            </h2>
-            <p className={`mt-3 text-base ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-              Distribution of startup pitches by industry vertical during the Nakuru roadshow
-            </p>
+
+            {/* photo */}
+            <motion.div variants={fadeUp} className="sys-photo"
+              style={{ order: i % 2 === 0 ? 1 : 0, borderRadius: 16, overflow: "hidden", aspectRatio: "4/3", boxShadow: "0 24px 64px rgba(0,0,0,0.6)" }}>
+              <img src={f.photo} alt={f.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            </motion.div>
+          </div>
+        </motion.section>
+      ))}
+
+      {/* ── Sector Dashboard ─────────────────────────────────────────────── */}
+      <section style={{ background: C.bgDash, padding: "100px 24px", borderTop: `1px solid ${C.border}` }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ marginBottom: 64 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#306CEC", marginBottom: 12 }}>Sectors</p>
+            <h2 style={{ fontSize: "clamp(2rem,4vw,3.5rem)", fontWeight: 900, letterSpacing: "-0.03em", color: C.text, margin: "0 0 16px" }}>Pitch Sector Breakdown</h2>
+            <p style={{ fontSize: 14, color: C.muted, maxWidth: 480, lineHeight: 1.6 }}>Distribution of the 32 startup pitches by industry vertical during the Nakuru roadshow.</p>
           </motion.div>
 
-          <motion.div
-            variants={fadeRise}
-            className={`rounded-2xl p-8 border ${
-              darkMode ? "bg-[#1a1f3a] border-gray-700/50" : "bg-white border-gray-100 shadow-lg"
-            }`}
-          >
-            <div className="space-y-6">
-              {sectorBreakdown.map((sector) => (
-                <SectorBar key={sector.name} sector={sector} darkMode={darkMode} />
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* ═══════════ OUTCOMES ═══════════ */}
-      <motion.section
-        className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-[#0a0f1e]" : "bg-white"}`}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
-        variants={stagger}
-      >
-        <div className="max-w-6xl mx-auto">
-          <motion.div variants={fadeRise} className="text-center mb-14">
-            <span className="text-sm font-bold text-[#306CEC] tracking-widest uppercase">Results</span>
-            <h2 className={`text-3xl md:text-4xl font-extrabold mt-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
-              Campaign Outcomes
-            </h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {reportSections[4].outcomes.map((outcome, i) => (
-              <motion.div
-                key={outcome.label}
-                variants={fadeRise}
-                transition={{ delay: i * 0.1 }}
-                className={`rounded-2xl p-6 border-l-4 border-l-[#306CEC] ${
-                  darkMode ? "bg-[#1a1f3a]" : "bg-[#F5F6F8]"
-                }`}
-              >
-                <p className="text-4xl font-extrabold text-[#306CEC] mb-2">{outcome.value}</p>
-                <h4 className={`text-lg font-bold mb-2 ${darkMode ? "text-white" : "text-gray-900"}`}>
-                  {outcome.label}
-                </h4>
-                <p className={`text-sm leading-relaxed ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
-                  {outcome.description}
-                </p>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
+            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 2 }}>
+            {sectorData.map((d, i) => (
+              <motion.div key={i} variants={fadeUp}
+                style={{ padding: "32px 28px", background: "rgba(255,255,255,0.02)", border: `1px solid ${C.border}`, transition: "background 0.2s", cursor: "default" }}
+                whileHover={{ background: "rgba(255,255,255,0.05)" }}>
+                <p style={{ fontSize: "clamp(2.2rem,4vw,3rem)", fontWeight: 900, color: d.color, lineHeight: 1, margin: "0 0 10px" }}>{d.value}</p>
+                <p style={{ fontSize: 12, fontWeight: 600, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 16px" }}>{d.label}</p>
+                <div style={{ height: 3, background: "rgba(255,255,255,0.08)", borderRadius: 2, overflow: "hidden" }}>
+                  <motion.div style={{ height: "100%", background: d.color, borderRadius: 2 }}
+                    initial={{ width: 0 }} whileInView={{ width: d.value }} viewport={{ once: true }}
+                    transition={{ duration: 1.2, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }} />
+                </div>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
-      </motion.section>
+      </section>
 
-      {/* ═══════════ RECOMMENDATIONS ═══════════ */}
-      <motion.section
-        className={`py-20 px-6 transition-colors duration-1000 ${darkMode ? "bg-black" : "bg-[#F5F6F8]"}`}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
-        variants={stagger}
-      >
-        <div className="max-w-5xl mx-auto">
-          <motion.div variants={fadeRise} className="text-center mb-14">
-            <span className="text-sm font-bold text-[#306CEC] tracking-widest uppercase">Next Steps</span>
-            <h2 className={`text-3xl md:text-4xl font-extrabold mt-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
-              Recommendations
-            </h2>
+
+      {/* ── Recommendations ──────────────────────────────────────────────── */}
+      <section style={{ background: C.bgAlt, padding: "100px 24px", borderTop: `1px solid ${C.border}` }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ marginBottom: 64 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#306CEC", marginBottom: 12 }}>Next Steps</p>
+            <h2 style={{ fontSize: "clamp(2rem,4vw,3.5rem)", fontWeight: 900, letterSpacing: "-0.03em", color: C.text, margin: 0 }}>Recommendations</h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {recommendations.map((rec, i) => {
-              const RIcon = rec.icon;
-              return (
-                <motion.div
-                  key={rec.title}
-                  variants={fadeRise}
-                  transition={{ delay: i * 0.1 }}
-                  whileHover={{ y: -4 }}
-                  className={`rounded-2xl p-6 border transition-all duration-300 relative overflow-hidden ${
-                    darkMode
-                      ? "bg-[#1a1f3a] border-gray-700/50"
-                      : "bg-white border-gray-100 shadow-md hover:shadow-xl"
-                  }`}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#306CEC]/10 flex items-center justify-center shrink-0">
-                      <RIcon className="w-6 h-6 text-[#306CEC]" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h4 className={`text-lg font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>
-                          {rec.title}
-                        </h4>
-                      </div>
-                      <span
-                        className={`inline-block text-xs font-bold px-3 py-1 rounded-full mb-3 ${
-                          rec.priority === "High"
-                            ? "bg-red-500/10 text-red-500"
-                            : "bg-yellow-500/10 text-yellow-600"
-                        }`}
-                      >
-                        {rec.priority} Priority
-                      </span>
-                      <p className={`text-sm leading-relaxed ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
-                        {rec.description}
-                      </p>
-                    </div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger} style={{ display: "flex", flexDirection: "column" }}>
+            {recommendations.map((r, i) => (
+              <motion.div key={i} variants={fadeUp}
+                style={{ display: "grid", gridTemplateColumns: "80px 1fr", gap: 32, padding: "40px 0", borderBottom: `1px solid ${C.border}` }}>
+                <span style={{ fontSize: "clamp(2rem,3.5vw,2.8rem)", fontWeight: 900, color: "#306CEC", opacity: 0.18, lineHeight: 1 }}>{r.n}</span>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                    <h3 style={{ fontSize: "clamp(1.1rem,2vw,1.4rem)", fontWeight: 800, color: C.text, margin: 0 }}>{r.title}</h3>
+                    <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 100, background: r.priority === "High" ? "rgba(239,68,68,0.12)" : "rgba(245,158,11,0.12)", color: r.priority === "High" ? "#EF4444" : "#F59E0B", whiteSpace: "nowrap" }}>{r.priority}</span>
                   </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </motion.section>
-
-      {/* ═══════════ CTA ═══════════ */}
-      <motion.section
-        className="relative py-24 px-6 overflow-hidden"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        variants={fadeRise}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-[#306CEC] via-[#4a7eec] to-[#2558c9]" />
-        <motion.div
-          className="absolute top-0 right-0 w-96 h-96 rounded-full bg-white/5 blur-3xl"
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 6, repeat: Infinity }}
-        />
-
-        <div className="relative z-10 max-w-3xl mx-auto text-center">
-          <motion.div
-            variants={fadeRise}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 mb-6"
-          >
-            <Heart className="w-4 h-4 text-white" />
-            <span className="text-sm font-semibold text-white/90">Be Part of the Movement</span>
+                  <p style={{ fontSize: 15, lineHeight: 1.8, color: "#94a3b8", margin: 0 }}>{r.body}</p>
+                </div>
+              </motion.div>
+            ))}
           </motion.div>
+        </div>
+      </section>
 
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6">
-            Decentralization Starts With You
-          </h2>
-          <p className="text-lg text-white/80 mb-10 max-w-xl mx-auto leading-relaxed">
-            Whether you're a founder, mentor, investor, or community leader, join Impact360 in
-            building thriving innovation ecosystems across every county in Kenya.
-          </p>
+      {/* ── CTA ──────────────────────────────────────────────────────────── */}
+      <section style={{ background: C.bg, padding: "100px 24px", borderTop: `1px solid ${C.border}` }}>
+        <div style={{ maxWidth: 680, margin: "0 auto", textAlign: "center" }}>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+            <motion.p variants={fadeUp} style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#306CEC", marginBottom: 24 }}>Be Part of It</motion.p>
+            <motion.h2 variants={fadeUp} style={{ fontSize: "clamp(2rem,4.5vw,3.8rem)", fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.1, color: C.text, margin: "0 0 24px" }}>Decentralization starts with you.</motion.h2>
+            <motion.p variants={fadeUp} style={{ fontSize: 16, lineHeight: 1.75, color: C.muted, marginBottom: 40 }}>
+              Whether you're a founder, mentor, investor, or community leader — join Impact360 in building thriving innovation ecosystems across every county in Kenya.
+            </motion.p>
+            <motion.div variants={fadeUp} style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
+              <a href="/events/roadshow" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#306CEC", color: "#fff", fontWeight: 700, fontSize: 14, padding: "14px 32px", borderRadius: 100, textDecoration: "none", boxShadow: "0 8px 32px rgba(48,108,236,0.35)" }}>
+                Register for Mombasa <ArrowRight size={16} />
+              </a>
+              <a href="/events" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontWeight: 700, fontSize: 14, padding: "14px 32px", borderRadius: 100, textDecoration: "none", color: C.text, border: `1.5px solid ${C.border}` }}>
+                View all events <ArrowUpRight size={16} />
+              </a>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
 
-          <div className="flex flex-wrap justify-center gap-4">
-            <button
-              onClick={() => setShowQR(true)}
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-white text-[#306CEC] font-bold rounded-full hover:bg-gray-100 transition-all duration-300 shadow-lg"
-            >
-              <Zap className="w-4 h-4" />
-              Join Impact360
-            </button>
-            <a
-              href="/events"
-              className="inline-flex items-center gap-2 px-8 py-3.5 border-2 border-white text-white font-bold rounded-full hover:bg-white/10 transition-all duration-300"
-            >
-              View Upcoming Events
+      {/* ── Other reports ────────────────────────────────────────────────── */}
+      <section style={{ background: "#000", padding: "60px 24px", borderTop: `1px solid ${C.border}` }}>
+        <div style={{ maxWidth: 960, margin: "0 auto", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 24 }}>
+          <div>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: C.muted, marginBottom: 8 }}>Read More Reports</p>
+            <h3 style={{ fontSize: "clamp(1.2rem,2.5vw,1.8rem)", fontWeight: 800, color: C.text, margin: 0 }}>The decentralization story continues.</h3>
+          </div>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <a href="/campaign/eldoret" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "transparent", border: `1px solid ${C.border}`, color: C.text, fontWeight: 700, fontSize: 14, padding: "12px 24px", borderRadius: 100, textDecoration: "none" }}>
+              Eldoret Report <ArrowUpRight size={14} />
             </a>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "transparent", border: `1px solid ${C.border}`, color: C.muted, fontWeight: 700, fontSize: 14, padding: "12px 24px", borderRadius: 100, cursor: "not-allowed", opacity: 0.4 }}>
+              Kisumu — coming soon
+            </span>
           </div>
         </div>
-      </motion.section>
+      </section>
+
+      <style>{`
+        @media (max-width: 700px) {
+          .sys-grid { grid-template-columns: 1fr !important; }
+          .sys-photo { order: -1 !important; }
+          .sys-text { order: 0 !important; }
+        }
+      `}</style>
 
       <Footer />
     </div>
