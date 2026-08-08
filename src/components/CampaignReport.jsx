@@ -209,17 +209,6 @@ export default function CampaignReport() {
         </div>
       </section>
 
-      {/* ── Photo break ──────────────────────────────────────────────────── */}
-      <div style={{ height: "50vh", minHeight: 300, overflow: "hidden", position: "relative" }}>
-        <img src="/Nakuru/Nakuru5.jpg" alt="Nakuru roadshow"
-          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%" }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(0,0,0,0.5) 0%, transparent 60%)" }} />
-        <div style={{ position: "absolute", bottom: 32, left: 0, right: 0 }}>
-          <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px" }}>
-            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 500 }}>Impact360 Roadshow · Nakuru, Kenya</span>
-          </div>
-        </div>
-      </div>
 
       {/* ── Findings header ──────────────────────────────────────────────── */}
       <section style={{ background: C.bg, padding: "80px 24px 40px" }}>
