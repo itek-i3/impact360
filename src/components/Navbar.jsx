@@ -8,7 +8,7 @@ const NAV_LINKS = [
   { name: "About", path: "/about" },
   { name: "Programs", path: "/programs" },
   { name: "Events", path: "/events" },
-  { name: "Campaigns", path: "/campaign" },
+  { name: "Reports", path: "/campaign" },
   { name: "Subscription", path: "/subscription" },
 ];
 
