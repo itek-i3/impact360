@@ -355,8 +355,8 @@ export default function EldoretReport() {
               Whether you're a founder, mentor, investor, or community leader — join Impact360 in building thriving innovation ecosystems across every county in Kenya.
             </motion.p>
             <motion.div variants={fadeUp} style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
-              <a href="/events/roadshow" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#306CEC", color: "#fff", fontWeight: 700, fontSize: 14, padding: "14px 32px", borderRadius: 100, textDecoration: "none", boxShadow: "0 8px 32px rgba(48,108,236,0.35)" }}>
-                Register for Mombasa <ArrowRight size={16} />
+              <a href="/events" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#306CEC", color: "#fff", fontWeight: 700, fontSize: 14, padding: "14px 32px", borderRadius: 100, textDecoration: "none", boxShadow: "0 8px 32px rgba(48,108,236,0.35)" }}>
+                View Events <ArrowRight size={16} />
               </a>
               <a href="/events" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontWeight: 700, fontSize: 14, padding: "14px 32px", borderRadius: 100, textDecoration: "none", color: C.text, border: `1.5px solid ${C.border}` }}>
                 View all events <ArrowUpRight size={16} />

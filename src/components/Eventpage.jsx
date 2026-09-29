@@ -1,8 +1,7 @@
 import React from "react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { RegisterModal } from "./RoadshowPage";
 import { useDarkMode } from "../DarkModeContext";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -245,8 +244,6 @@ function Story({ s, i, darkMode }) {
 
 export default function EventsPage() {
   const { darkMode } = useDarkMode();
-  const [mombasaModal, setMombasaModal] = React.useState(false);
-  const mombasa = { name: "Mombasa", img: "/events/Mombasa.jpg", date: "October 3rd, 2026", venue: "Baraza Media Lab", time: "12:00 PM", status: "next" };
   const heroRef = React.useRef(null);
   const { scrollY } = useScroll();
   const heroY = useTransform(scrollY, [0, 600], [0, 160]);
@@ -308,30 +305,26 @@ export default function EventsPage() {
       <main style={{ width: "100%" }}>
         {stories.map((s, i) => <Story key={s.city} s={s} i={i} darkMode={darkMode} />)}
 
-        {/* Mombasa — next stop */}
+        {/* Mombasa — postponed */}
         <motion.div {...appear} style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 80px 100px" }}>
           <p style={{ fontSize: "11px", color: "#306CEC", fontFamily: "'DM Sans', sans-serif", fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: "12px" }}>
-            No. 04 &nbsp;·&nbsp; Next stop
+            No. 04 &nbsp;·&nbsp; Postponed
           </p>
           <h3 style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)", fontWeight: 800, fontFamily: "'League Spartan', sans-serif", color: darkMode ? "#fff" : "#0a0a0a", margin: "0 0 10px", letterSpacing: "-0.025em", lineHeight: 1 }}>
-            Mombasa, October 3.
+            Mombasa, postponed.
           </h3>
           <p style={{ fontSize: "14px", color: darkMode ? "rgba(255,255,255,0.38)" : "rgba(0,0,0,0.45)", fontFamily: "'DM Sans', sans-serif", margin: "0 0 6px", fontStyle: "italic" }}>
             The next page is unwritten. Come help us write it.
           </p>
           <p style={{ fontSize: "13px", color: darkMode ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.35)", fontFamily: "'DM Sans', sans-serif", margin: "0 0 28px" }}>
-            Baraza Media Lab · 12:00 PM
+            Baraza Media Lab · new date TBA
           </p>
-          <button onClick={() => setMombasaModal(true)}
-            style={{ display: "inline-flex", alignItems: "center", gap: "7px", border: `1px solid ${darkMode ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.2)"}`, color: darkMode ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)", padding: "11px 22px", borderRadius: "100px", fontFamily: "'DM Sans', sans-serif", fontWeight: 500, fontSize: "13px", background: "none", cursor: "pointer" }}>
-            Register now <ArrowRight size={13} />
-          </button>
+          <Link to="/events/roadshow"
+            style={{ display: "inline-flex", alignItems: "center", gap: "7px", border: `1px solid ${darkMode ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.2)"}`, color: darkMode ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)", padding: "11px 22px", borderRadius: "100px", fontFamily: "'DM Sans', sans-serif", fontWeight: 500, fontSize: "13px", background: "none", textDecoration: "none" }}>
+            View Roadshow <ArrowRight size={13} />
+          </Link>
         </motion.div>
       </main>
-
-      <AnimatePresence>
-        {mombasaModal && <RegisterModal town={mombasa} darkMode={true} onClose={() => setMombasaModal(false)} />}
-      </AnimatePresence>
 
       <Footer />
 

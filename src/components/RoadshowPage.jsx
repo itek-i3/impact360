@@ -102,7 +102,7 @@ const towns = [
   { name: "Eldoret", img: "/events/Eldoret.jpg", date: "May 23, 2026", status: "concluded", formUrl: "https://forms.gle/FoEdvsEvgt3ohDm48" },
   { name: "Kisumu", img: "/events/Kisumu.jpg", date: "July 4th, 2026", venue: "Baraza Media Lab", time: "12:00 PM", status: "past", formUrl: null },
   { name: "Nairobi", img: "/events/Nairobi.jpg", date: "Coming Soon", status: "tba", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfBnrBvB8v6THmM1-_bzauyY3lymRe7ULXrVC9iHUn1TXy4Hg/viewform?usp=publish-editor" },
-  { name: "Mombasa", img: "/events/Mombasa.jpg", date: "October 3rd, 2026", venue: "Baraza Media Lab", time: "12:00 PM", status: "next", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfOYPX3TuQl14679C2UaAXElzUcP5x4iVd0tJrQAIlB8nQa-w/viewform?usp=publish-editor" },
+  { name: "Mombasa", img: "/events/Mombasa.jpg", date: "Postponed — new date TBA", venue: "Baraza Media Lab", status: "tba", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfOYPX3TuQl14679C2UaAXElzUcP5x4iVd0tJrQAIlB8nQa-w/viewform?usp=publish-editor" },
   { name: "Arusha", img: "/events/Arusha.jpg", date: "Coming Soon", status: "tba", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLScbaFJyZ6az4BkW93Of8YHi5sRSCmkeqTzanJDQcoXJibV_RQ/viewform?usp=publish-editor" },
   { name: "Kigali", img: "/events/Kigali.jpg", date: "Coming Soon", status: "tba", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSeqU-HkwV1JpShk-Ucme6DcusnA23L7XuPt6eebuZvxSjQpBg/viewform?usp=publish-editor" },
   { name: "Addis Ababa", img: "/events/Addis ababa.jpg", date: "Coming Soon", status: "tba", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSf-NKlWnfDjdJOttoQIx0Ff3Ix97WJju0DV2qeRCkDI5PBN3w/viewform?usp=publish-editor" },
@@ -630,8 +630,6 @@ export default function RoadshowPage() {
   const [showQR, setShowQR] = React.useState(false);
   const [registerTown, setRegisterTown] = React.useState(null);
 
-  const kisumuTown = towns.find(t => t.name === "Mombasa");
-
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const cityParam = params.get("register");
@@ -744,12 +742,12 @@ export default function RoadshowPage() {
             transition={{ duration: 0.6, delay: 0.42 }}
             style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "52px" }}
           >
-            <button onClick={() => setRegisterTown(kisumuTown)}
+            <a href="/events"
               className="inline-flex items-center gap-2 hover:scale-105 active:scale-95 transition-transform duration-200"
-              style={{ background: "#306CEC", color: "#fff", padding: "13px 28px", borderRadius: "100px", fontFamily: "'League Spartan', sans-serif", fontWeight: 800, fontSize: "13px", cursor: "pointer", border: "none" }}
+              style={{ background: "#306CEC", color: "#fff", padding: "13px 28px", borderRadius: "100px", fontFamily: "'League Spartan', sans-serif", fontWeight: 800, fontSize: "13px", cursor: "pointer", border: "none", textDecoration: "none" }}
             >
-              Register for Mombasa <ArrowRight size={14} />
-            </button>
+              View Events <ArrowRight size={14} />
+            </a>
             <button onClick={() => setShowQR(true)}
               className="inline-flex items-center gap-2 hover:scale-105 active:scale-95 transition-transform duration-200"
               style={{ background: "rgba(255,255,255,0.1)", color: "#fff", padding: "13px 28px", borderRadius: "100px", fontFamily: "'League Spartan', sans-serif", fontWeight: 800, fontSize: "13px", border: "1px solid rgba(255,255,255,0.2)", cursor: "pointer" }}
@@ -764,9 +762,9 @@ export default function RoadshowPage() {
             transition={{ duration: 0.7, delay: 0.58 }}
             style={{ display: "inline-flex", alignItems: "center", gap: "14px", padding: "9px 20px", borderRadius: "100px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)", width: "fit-content" }}
           >
-            <span style={{ fontSize: "10px", fontWeight: 700, color: "#306CEC", letterSpacing: "0.14em", textTransform: "uppercase", fontFamily: "'DM Sans', sans-serif" }}>Next Stop</span>
+            <span style={{ fontSize: "10px", fontWeight: 700, color: "#306CEC", letterSpacing: "0.14em", textTransform: "uppercase", fontFamily: "'DM Sans', sans-serif" }}>Postponed</span>
             <div style={{ width: "1px", height: "10px", background: "rgba(255,255,255,0.14)" }} />
-            <span style={{ fontSize: "12px", fontWeight: 600, color: "rgba(255,255,255,0.6)", fontFamily: "'DM Sans', sans-serif" }}>Mombasa · October 3rd, 2026</span>
+            <span style={{ fontSize: "12px", fontWeight: 600, color: "rgba(255,255,255,0.6)", fontFamily: "'DM Sans', sans-serif" }}>Mombasa · new date TBA</span>
           </motion.div>
         </div>
 
@@ -777,7 +775,7 @@ export default function RoadshowPage() {
         </div>
       </section>
 
-      {/* ══ 2. NEXT STOP: MOMBASA ══ */}
+      {/* ══ 2. MOMBASA — POSTPONED ══ */}
       <section className="relative overflow-hidden" style={{ background: darkMode ? "#0a0a14" : "#EEF3FF" }}>
         {/* BG glow */}
         <div className="absolute inset-0 pointer-events-none" style={{ background: darkMode ? "radial-gradient(ellipse at 70% 50%, rgba(48,108,236,0.18) 0%, transparent 65%)" : "radial-gradient(ellipse at 70% 50%, rgba(48,108,236,0.12) 0%, transparent 65%)" }} />
@@ -787,21 +785,21 @@ export default function RoadshowPage() {
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
             <div className="flex items-center gap-3 mb-5">
               <div className="h-px w-8 bg-[#306CEC]" />
-              <span className="text-[10px] font-black tracking-[0.3em] uppercase text-[#306CEC]" style={{ fontFamily: "'DM Sans', sans-serif" }}>Next Stop</span>
+              <span className="text-[10px] font-black tracking-[0.3em] uppercase text-[#306CEC]" style={{ fontFamily: "'DM Sans', sans-serif" }}>Postponed</span>
             </div>
             <h2 className="font-black uppercase leading-[0.85] mb-6" style={{ fontFamily: "'League Spartan', sans-serif", fontSize: "clamp(3rem, 8vw, 7rem)", letterSpacing: "-0.03em", color: darkMode ? "#fff" : "#0a0a14" }}>
               Mom<span style={{ color: "#306CEC" }}>basa</span>
             </h2>
             <div className="flex flex-wrap items-center gap-3 mb-8">
               <div className="inline-block bg-[#306CEC]/15 border border-[#306CEC]/30 text-[#306CEC] text-sm font-bold px-4 py-2 rounded-full" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                October 3rd, 2026
+                New date TBA
               </div>
               <div className="inline-block bg-[#306CEC]/15 border border-[#306CEC]/30 text-[#306CEC] text-sm font-bold px-4 py-2 rounded-full" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 Baraza Media Lab
               </div>
             </div>
             <p className="text-base md:text-lg mb-10 max-w-lg" style={{ fontFamily: "'DM Sans', sans-serif", color: darkMode ? "rgba(255,255,255,0.55)" : "rgba(10,10,20,0.6)", lineHeight: 1.75 }}>
-              Kenya's coastal jewel. A city where culture, trade, and ambition meet the ocean. The Roadshow is heading to Mombasa. Be there.
+              Kenya's coastal jewel. A city where culture, trade, and ambition meet the ocean. This stop has been postponed — we'll share the new date as soon as it's confirmed.
             </p>
 
             {/* Feature pills */}
@@ -811,27 +809,27 @@ export default function RoadshowPage() {
               ))}
             </div>
 
-            <button onClick={() => setRegisterTown(kisumuTown)}
+            <a href="/events"
               className="inline-flex items-center gap-2 bg-[#306CEC] text-white px-8 py-4 rounded-full font-black text-sm hover:bg-[#4A80FF] transition-all duration-300 hover:scale-105"
-              style={{ fontFamily: "'League Spartan', sans-serif", cursor: "pointer", border: "none" }}
+              style={{ fontFamily: "'League Spartan', sans-serif", cursor: "pointer", border: "none", textDecoration: "none" }}
             >
-              Register Now <ArrowRight className="w-4 h-4" />
-            </button>
+              View Events <ArrowRight className="w-4 h-4" />
+            </a>
           </motion.div>
 
           {/* Right image */}
           <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} className="relative">
             <div className="absolute -inset-3 rounded-3xl" style={{ background: "linear-gradient(135deg, rgba(48,108,236,0.3) 0%, transparent 60%)", filter: "blur(20px)" }} />
             <img
-              src="/events/Mombasa.jpg"
-              alt="Mombasa Roadshow"
-              className="relative rounded-2xl w-full object-cover"
-              style={{ minHeight: "320px", maxHeight: "480px" }}
+              src="/events/MombasaPostponed.jpg"
+              alt="Mombasa Roadshow — Postponed"
+              className="relative rounded-2xl w-full object-contain"
+              style={{ maxHeight: "600px" }}
             />
             {/* Overlay badge */}
             <div className="absolute top-5 left-5 bg-black/60 backdrop-blur-sm rounded-xl px-4 py-2.5 border border-white/10">
               <div className="text-[9px] font-black tracking-[0.2em] uppercase text-[#306CEC]" style={{ fontFamily: "'DM Sans', sans-serif" }}>Mombasa, Kenya</div>
-              <div className="text-sm font-black text-white mt-0.5" style={{ fontFamily: "'League Spartan', sans-serif" }}>OCTOBER 3RD, 2026</div>
+              <div className="text-sm font-black text-white mt-0.5" style={{ fontFamily: "'League Spartan', sans-serif" }}>POSTPONED</div>
             </div>
           </motion.div>
         </div>
@@ -905,18 +903,18 @@ export default function RoadshowPage() {
         <div className="max-w-4xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
             <h2 className="font-black uppercase mb-4" style={{ fontFamily: "'League Spartan', sans-serif", fontSize: "clamp(2rem, 5vw, 4rem)", letterSpacing: "-0.02em", color: "#fff" }}>
-              Don't miss<br /><span style={{ color: darkMode ? "#306CEC" : "rgba(255,255,255,0.75)" }}>Mombasa.</span>
+              Mombasa is<br /><span style={{ color: darkMode ? "#306CEC" : "rgba(255,255,255,0.75)" }}>postponed.</span>
             </h2>
             <p className="text-base mb-10" style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(255,255,255,0.65)" }}>
-              October 3rd, 2026 · Register now before spots fill up.
+              New date TBA · Check the events page for the latest updates.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <button onClick={() => setRegisterTown(kisumuTown)}
+              <a href="/events"
                 className="inline-flex items-center gap-2 text-sm hover:scale-105 transition-all duration-300"
-                style={{ fontFamily: "'League Spartan', sans-serif", fontWeight: 800, background: "#fff", color: "#306CEC", padding: "14px 32px", borderRadius: "100px", cursor: "pointer", border: "none" }}
+                style={{ fontFamily: "'League Spartan', sans-serif", fontWeight: 800, background: "#fff", color: "#306CEC", padding: "14px 32px", borderRadius: "100px", cursor: "pointer", border: "none", textDecoration: "none" }}
               >
-                Register Now <ArrowRight className="w-4 h-4" />
-              </button>
+                View Events <ArrowRight className="w-4 h-4" />
+              </a>
               <button onClick={() => setShowQR(true)}
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-black text-sm text-white border border-white/30 hover:border-white/60 hover:bg-white/10 transition-all duration-300"
                 style={{ fontFamily: "'League Spartan', sans-serif" }}
