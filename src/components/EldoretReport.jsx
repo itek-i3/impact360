@@ -149,7 +149,11 @@ export default function EldoretReport() {
             Nakuru
           </a>
           <span style={{ fontSize: 13, fontWeight: 700, color: "#fff", background: "#306CEC", padding: "4px 14px", borderRadius: 100 }}>Eldoret</span>
-          <span style={{ fontSize: 13, fontWeight: 600, color: C.muted, padding: "4px 14px", borderRadius: 100, border: `1px solid ${C.border}`, opacity: 0.4, cursor: "not-allowed" }}>Kisumu — soon</span>
+          <a href="/campaign/kisumu" style={{ fontSize: 13, fontWeight: 600, color: C.muted, textDecoration: "none", padding: "4px 14px", borderRadius: 100, border: `1px solid ${C.border}`, transition: "all 0.2s" }}
+            onMouseEnter={e => { e.target.style.color = "#306CEC"; e.target.style.borderColor = "#306CEC"; }}
+            onMouseLeave={e => { e.target.style.color = C.muted; e.target.style.borderColor = C.border; }}>
+            Kisumu
+          </a>
         </div>
       </div>
 
@@ -373,9 +377,9 @@ export default function EldoretReport() {
             <a href="/campaign" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "transparent", border: `1px solid ${C.border}`, color: C.text, fontWeight: 700, fontSize: 14, padding: "12px 24px", borderRadius: 100, textDecoration: "none" }}>
               Nakuru Report <ArrowUpRight size={14} />
             </a>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "transparent", border: `1px solid ${C.border}`, color: C.muted, fontWeight: 700, fontSize: 14, padding: "12px 24px", borderRadius: 100, cursor: "not-allowed", opacity: 0.4 }}>
-              Kisumu — coming soon
-            </span>
+            <a href="/campaign/kisumu" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "transparent", border: `1px solid ${C.border}`, color: C.text, fontWeight: 700, fontSize: 14, padding: "12px 24px", borderRadius: 100, textDecoration: "none" }}>
+              Kisumu Report <ArrowUpRight size={14} />
+            </a>
           </div>
         </div>
       </section>
